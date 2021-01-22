@@ -51,7 +51,7 @@ module.exports = {
 		 }
     },
 
-    UpdateStatus : async function(req , res){
+    updateRelationStatus : async function(req , res){
         let relationData = await Relations.find({relative_id : req.body.self_id})
                 .catch(function (err) {
                     res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));

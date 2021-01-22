@@ -23,7 +23,7 @@ module.exports.routes = {
   'PUT /createUser': 'UpdateProfileController.createUser',
   'GET /getUser' : 'UpdateProfileController.getUser',
   'POST /createRelation': 'MangeRelationController.createRelation',
-  'PUT /updateRelationStatus': 'MangeRelationController.UpdateStatus',
+  'PUT /updateRelationStatus': 'MangeRelationController.updateRelationStatus',
   'GET /getRelation' : 'MangeRelationController.getRelation',
   'PUT /uploadPhoto' : 'UpdateProfileController.uploadPhoto'
   /***************************************************************************
