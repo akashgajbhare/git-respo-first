@@ -46,7 +46,7 @@ here you want to pass self_id
 
 
 This PUT-Api for Update the Status like Appoved, Discarded
-API- http://13.232.145.240:1337/UpdateStatus
+API- http://13.232.145.240:1337/updateRelationStatus
 
 send Parameter like this field Name :
 {
@@ -55,14 +55,14 @@ send Parameter like this field Name :
 }
 
 
-This PUT-Api for Update the Status like Appoved, Discarded
-API- http://13.232.145.240:1337/UpdateStatus
+This PUT-Api for Update Profile Picture
+API- http://13.232.145.240:1337/uploadPhoto
 
 send Parameter like this field Name :
 {
 "self_id" : "60082a06fe056412ac5ea8dc",
-"status" : "Approved"
+"photo" : fileevent
 }
- 
+in the photo filed pass the file event. 
 
   
