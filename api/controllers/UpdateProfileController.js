@@ -91,7 +91,7 @@ module.exports = {
         }
     },
     
-    uploadPhoto : function(req, res){
+    uploadPhoto : async function(req, res){
         //stream Content all file Details. 
         let file = req.file('flightsUpload')._files[0].stream
         let allowedTypes  = ['image/jpeg', 'image/png'];
@@ -102,9 +102,9 @@ module.exports = {
         }
         else
         {
-            sails.config.globals.getdumppath('Flights', async function(err, path) {
+           let path = await sails.config.globals.getdumppath('ProfilePhoto');
                 console.log(path);
-                req.file('flightsUpload').upload({
+                req.file('photo').upload({
                     dirname: ('../..'+ path),
                     // You can apply a file upload limit (in bytes)
                 },
@@ -112,21 +112,20 @@ module.exports = {
                     if (err) return res.serverError(err);
                     console.log(uploadedFiles[0].fd);
                     
-                    // if(uploadedFiles.length !== 0){
-                    //     let update = Users.update({id : req.body.self_id}).set({photo: uploadedFiles[0].fd}).fetch()
-                    //     .catch(function (err) {
-                    //         console.log(err);
-                    //         res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
-                    //     });
-                    //     if(update !== 0){
+                    if(uploadedFiles.length !== 0){
+                        let userUpdate = Users.update({id : req.body.self_id}).set({photo: uploadedFiles[0].fd}).fetch()
+                        .catch(function (err) {
+                            console.log(err);
+                            res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
+                        });
+                        if(userUpdate !== 0){
                             res.json(sails.config.custom.jsonResponse(null, "Photo upload Successfully"))
-                    //     }else
-                    //     {   
-                    //         res.json(sails.config.custom.jsonResponse("Something went wrong, please try again later.." , null))
-                    //     }
-                    // }                        
+                        }else
+                        {   
+                            res.json(sails.config.custom.jsonResponse("Something went wrong, please try again later.." , null))
+                        }
+                    }                        
                 });
-            })
         }
     },
 };

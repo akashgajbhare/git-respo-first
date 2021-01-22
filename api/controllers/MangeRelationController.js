@@ -22,14 +22,14 @@ module.exports = {
 		if(isValideNumber.errmsg){
             res.json(sails.config.custom.jsonResponse( isValideNumber.errmsg, null))
 		} else{
-            let isPresent = await Users.find({contactNo : req.body.relativephone})
+            let UserData = await Users.find({contactNo : req.body.relativephone})
                 .catch(function (err) {
                     res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
                 });
-            if(isPresent.length !== 0){
+            if(UserData.length !== 0){
                 let createdRelation = await Relations.create({
                     self_id: req.body.self_id,
-                    relative_id : isPresent[0].id,
+                    relative_id : UserData[0].id,
                     relationship : "Friend",
                 })
                 .fetch()
@@ -52,12 +52,12 @@ module.exports = {
     },
 
     UpdateStatus : async function(req , res){
-        let isPresent = await Relations.find({relative_id : req.body.self_id})
+        let relationData = await Relations.find({relative_id : req.body.self_id})
                 .catch(function (err) {
                     res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
                 });
-            if(isPresent.length !==0 ){    
-                let UpdateStatus = await Relations.update({id : isPresent[0].id}).set({
+            if(relationData.length !==0 ){    
+                let UpdateStatus = await Relations.update({id : relationData[0].id}).set({
                     status : req.body.status
                 }).fetch()
                 .catch(function (err) {

@@ -1,4 +1,4 @@
-This POST-Api for User Registration
+This PUT-Api for User Registration
 API- http://13.232.145.240:1337/createUser 
 
 send Parameter like this field Name : 
@@ -43,7 +43,9 @@ self_id : "60082a06fe056412ac5ea8dc"
 }
 here you want to pass self_id
 
-This POST-Api for Update the Status like Appoved, Discarded
+
+
+This PUT-Api for Update the Status like Appoved, Discarded
 API- http://13.232.145.240:1337/UpdateStatus
 
 send Parameter like this field Name :
@@ -52,6 +54,15 @@ send Parameter like this field Name :
 "status" : "Approved"
 }
 
+
+This PUT-Api for Update the Status like Appoved, Discarded
+API- http://13.232.145.240:1337/UpdateStatus
+
+send Parameter like this field Name :
+{
+"self_id" : "60082a06fe056412ac5ea8dc",
+"status" : "Approved"
+}
  
 
   

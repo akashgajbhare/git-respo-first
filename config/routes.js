@@ -20,13 +20,12 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': { view: 'pages/homepage' },
-  'POST /createUser': 'UpdateProfileController.createUser',
+  'PUT /createUser': 'UpdateProfileController.createUser',
   'GET /getUser' : 'UpdateProfileController.getUser',
   'POST /createRelation': 'MangeRelationController.createRelation',
-  'POST /UpdateStatus': 'MangeRelationController.UpdateStatus',
+  'PUT /updateRelationStatus': 'MangeRelationController.UpdateStatus',
   'GET /getRelation' : 'MangeRelationController.getRelation',
-  'POST /justvalidate' : 'UpdateProfileController.justvalidate',
-  'POST /uploadPhoto' : 'UpdateProfileController.uploadPhoto'
+  'PUT /uploadPhoto' : 'UpdateProfileController.uploadPhoto'
   /***************************************************************************
   *                                                                          *
   * More custom routes here...                                               *

@@ -48,21 +48,30 @@ module.exports.globals = {
   ****************************************************************************/
 
   sails: true,
-  
-  getdumppath: function(purpose, fn) {
-		var date = new Date();
-		var year = date.getFullYear();
-		var month = date.getMonth() + 1;
-		var day = date.getDate();
 
-		var path_for_url = "/static_data/" + purpose + "/" + year + "/" + month + "/" + day + "/";
-		var path = '.' + path_for_url;
-		var mkdirp = require('mkdirp');
-    
-		mkdirp(path, function (err) {
-			fn(err, path_for_url);
-		});
-	},
+  getdumppath: function (purpose) {
+    return new Promise((good, bad) => {
+      try {
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+
+        var path_for_url = "/static_data/" + purpose + "/" + year + "/" + month + "/" + day + "/";
+        var path = '.' + path_for_url;
+        var mkdirp = require('mkdirp');
+        mkdirp(path, function (err) {
+          if (err) {
+            bad(err)
+          } else {
+            good(path_for_url)
+          }
+        });
+      } catch (err) {
+        bad(err)
+      }
+    })
+  },
 
 
 };
