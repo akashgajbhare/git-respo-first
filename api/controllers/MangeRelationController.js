@@ -30,7 +30,7 @@ module.exports = {
                 let createdRelation = await Relations.create({
                     self_id: req.body.self_id,
                     relative_id : UserData[0].id,
-                    relationship : "Friend",
+                    relationship : req.body.relationship,
                 })
                 .fetch()
                 .catch(function (err) {
@@ -56,20 +56,28 @@ module.exports = {
                 .catch(function (err) {
                     res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
                 });
-            if(relationData.length !==0 ){    
-                let UpdateStatus = await Relations.update({id : relationData[0].id}).set({
-                    status : req.body.status
-                }).fetch()
-                .catch(function (err) {
-                    res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
-                });
-                if(UpdateStatus.length !== 0){
-                    res.json(sails.config.custom.jsonResponse(null, UpdateStatus))
-                }
-                else
-                {
-                    res.json(sails.config.custom.jsonResponse( "Relation Status is not Updated" , null))
-                }
+            if(relationData.length !== 0 ){    
+                relationData.map(async(relation) =>{
+                    if(relation.self_id === req.body.relative_id){
+                        let UpdateStatus = await Relations.update({id : relation.id}).set({
+                            status : req.body.status
+                        }).fetch()
+                        .catch(function (err) {
+                            res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
+                        });
+                            if(UpdateStatus.length !== 0){
+                                res.json(sails.config.custom.jsonResponse(null, UpdateStatus))
+                            }
+                            else
+                            {
+                                res.json(sails.config.custom.jsonResponse( "Relation Status is not Updated" , null))
+                            }
+                    }
+                }) 
+            }
+            else
+            {
+                res.json(sails.config.custom.jsonResponse( "Relation data is not found.." , null))
             }
     }
 };

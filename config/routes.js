@@ -20,7 +20,7 @@ module.exports.routes = {
   ***************************************************************************/
 
   '/': { view: 'pages/homepage' },
-  'PUT /createUser': 'UpdateProfileController.createUser',
+  'POST /createUser': 'UpdateProfileController.createUser',
   'GET /getUser' : 'UpdateProfileController.getUser',
   'POST /createRelation': 'MangeRelationController.createRelation',
   'PUT /updateRelationStatus': 'MangeRelationController.updateRelationStatus',
