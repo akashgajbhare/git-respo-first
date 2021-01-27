@@ -106,30 +106,52 @@ here you want to pass self_id
 
 Response : 
 {
-    "data": [
-        {
-            "createdAt": 1611150852438,
-            "updatedAt": 1611153512847,
-            "id": "6008360492351a10b4916012",
-            "self_id": "60082965fe056412ac5ea8db",
-            "relative_id": "60082a06fe056412ac5ea8dc",
-            "relationship": "Friend",
-            "status": "Approved"
-        },
-        {
-            "createdAt": 1611637989795,
-            "updatedAt": 1611637989795,
-            "id": "600fa4e5ecaa822c48669ef0",
-            "self_id": "60093e0b71f48a250453126b",
-            "relative_id": "60082a06fe056412ac5ea8dc",
-            "relationship": "sun",
-            "status": "Pending"
-        }
-    ]
+    "data": {
+        "getRelativeRequest": [
+             {
+                "createdAt": 1611744860749,
+                "updatedAt": 1611744860749,
+                "id": "6011465c7ee58f4320cc1974",
+                "self_id": "60082a06fe056412ac5ea8dc",
+                "relative_id": "60082965fe056412ac5ea8db",
+                "relationship": "Friend",
+                "status": "Pending"
+            },
+            {
+                "createdAt": 1611744860749,
+                "updatedAt": 1611744860749,
+                "id": "6011465c7ee58f4320cc1974",
+                "self_id": "60082a06fe056412ac5ea8dc",
+                "relative_id": "60082965fe056412ac5ea8db",
+                "relationship": "Friend",
+                "status": "Pending"
+            }
+        ],
+        "selfCreated": [
+            {
+                "createdAt": 1611744860749,
+                "updatedAt": 1611744860749,
+                "id": "6011465c7ee58f4320cc1974",
+                "self_id": "60082a06fe056412ac5ea8dc",
+                "relative_id": "60082965fe056412ac5ea8db",
+                "relationship": "Friend",
+                "status": "Pending"
+            },
+             {
+                "createdAt": 1611744860749,
+                "updatedAt": 1611744860749,
+                "id": "6011465c7ee58f4320cc1974",
+                "self_id": "60082a06fe056412ac5ea8dc",
+                "relative_id": "60082965fe056412ac5ea8db",
+                "relationship": "Friend",
+                "status": "Pending"
+            }
+        ]
+    }
 }
 
 
-This PUT-Api for Update the Status like Appoved, Discarded
+This PUT-Api for Update the Status like Appoved, Declined
 API- http://13.232.145.240:1337/updateRelationStatus
 
 send Parameter like this field Name :
@@ -154,7 +176,7 @@ Response :
     ]
 }
 
-This PUT-Api for Update Profile Picture
+This POST-Api for Update Profile Picture
 API- http://13.232.145.240:1337/uploadPhoto
 
 send Parameter like this field Name :
@@ -164,4 +186,16 @@ send Parameter like this field Name :
 }
 in the photo filed pass the file event. 
 
-  
+
+This POST-Api for Delete the Relation table field using Relation Table Id
+API- http://13.232.145.240:1337/deleteRelation
+
+send Parameter like this field Name :
+{
+"id" : "6008360492351a10b4916012"
+}
+
+Response :
+{
+    "data": "Record deleted Successfully"
+}

@@ -25,7 +25,9 @@ module.exports.routes = {
   'POST /createRelation': 'MangeRelationController.createRelation',
   'PUT /updateRelationStatus': 'MangeRelationController.updateRelationStatus',
   'GET /getRelation' : 'MangeRelationController.getRelation',
-  'PUT /uploadPhoto' : 'UpdateProfileController.uploadPhoto'
+  'POST /uploadPhoto' : 'UpdateProfileController.uploadPhoto',
+  'POST /deleteRelation': 'MangeRelationController.deleteRelation',
+  
   /***************************************************************************
   *                                                                          *
   * More custom routes here...                                               *
