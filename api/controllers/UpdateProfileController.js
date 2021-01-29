@@ -6,29 +6,43 @@
  */
 module.exports = {
     getUser: async function (req, res) {
-        let rules = [{ tagid: "mobileno", text: req.query.userphone, regex_name: 'text', errmsg: 'Please enter the valid mobile No', allow_numbers: true, max: 10, min: 10, required: true }];
-        let isValideNumber = await sails.helpers.validation(rules);
-        console.log('isValideNumber ' + JSON.stringify(isValideNumber));
-        if (isValideNumber.errmsg) {
-            res.json(sails.config.custom.jsonResponse(isValideNumber.errmsg, null))
-        } 
-        else 
-        {
-            if (req.query.userphone) {
-                let getDetails = await Users.find({ contactNo: req.query.userphone }).catch(function (err) {
-                    res.json(sails.config.custom.jsonResponse("Something went wrong", null))
-                })
-                if (getDetails.length !== 0) {
-                    res.json(sails.config.custom.jsonResponse(null, getDetails))
-                }
-                else {
-                    res.json(sails.config.custom.jsonResponse("User details is not available", null))
-                }
+        if(req.query.id){
+            let getDetails = await Users.find({ id : req.query.id }).catch(function (err) {
+                res.json(sails.config.custom.jsonResponse("Something went wrong", null))
+            })
+            if (getDetails.length !== 0) {
+                res.json(sails.config.custom.jsonResponse(null, getDetails))
             }
             else {
                 res.json(sails.config.custom.jsonResponse("User details is not available", null))
             }
         }
+        else 
+        {
+            let rules = [{ tagid: "mobileno", text: req.query.userphone, regex_name: 'text', errmsg: 'Please enter the valid mobile No', allow_numbers: true, max: 10, min: 10, required: true }];
+            let isValideNumber = await sails.helpers.validation(rules);
+            console.log('isValideNumber ' + JSON.stringify(isValideNumber));
+            if (isValideNumber.errmsg) {
+                res.json(sails.config.custom.jsonResponse(isValideNumber.errmsg, null))
+            } 
+            else 
+            {
+                if (req.query.userphone) {
+                    let getDetails = await Users.find({ contactNo: req.query.userphone }).catch(function (err) {
+                        res.json(sails.config.custom.jsonResponse("Something went wrong", null))
+                    })
+                    if (getDetails.length !== 0) {
+                        res.json(sails.config.custom.jsonResponse(null, getDetails))
+                    }
+                    else {
+                        res.json(sails.config.custom.jsonResponse("User details is not available", null))
+                    }
+                }
+                else {
+                    res.json(sails.config.custom.jsonResponse("User details is not available", null))
+                }
+            }
+        }    
     },
 
     createUser: async function (req, res) {
