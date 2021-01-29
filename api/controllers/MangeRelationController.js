@@ -74,28 +74,24 @@ module.exports = {
     },
 
     updateRelationStatus : async function(req , res){
-        let relationData = await Relations.find({relative_id : req.body.self_id})
+        let relationData = await Relations.find({id : req.body.id})
                 .catch(function (err) {
                     res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
                 });
             if(relationData.length !== 0 ){    
-                relationData.map(async(relation) =>{
-                    if(relation.self_id === req.body.relative_id){
-                        let UpdateStatus = await Relations.update({id : relation.id}).set({
-                            status : req.body.status
-                        }).fetch()
-                        .catch(function (err) {
-                            res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
-                        });
-                            if(UpdateStatus.length !== 0){
-                                res.json(sails.config.custom.jsonResponse(null, UpdateStatus))
-                            }
-                            else
-                            {
-                                res.json(sails.config.custom.jsonResponse( "Relation Status is not Updated" , null))
-                            }
+                let UpdateStatus = await Relations.update({id : req.body.id}).set({
+                    status : req.body.status
+                }).fetch()
+                .catch(function (err) {
+                    res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
+                });
+                    if(UpdateStatus.length !== 0){
+                        res.json(sails.config.custom.jsonResponse(null, UpdateStatus))
                     }
-                }) 
+                    else
+                    {
+                        res.json(sails.config.custom.jsonResponse( "Relation Status is not Updated" , null))
+                    }
             }
             else
             {
