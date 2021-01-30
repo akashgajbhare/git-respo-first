@@ -26,5 +26,24 @@ module.exports.bootstrap = async function() {
   //   // etc.
   // ]);
   // ```
+	setTimeout(function()
+	{
+		let softlinknames = ['forms', 'uploadeddbf', 'static_data'];
+		let shell = require('shelljs');
+		
+		for(let i = 0; i < softlinknames.length; i++) {
+			shell.mkdir("-p", './' + softlinknames[i]);
+
+			let lnk = require('lnk');
+			lnk([softlinknames[i]], '.tmp/public').then(() => console.log(softlinknames[i] + ' created')).catch((err)=>console.log(err));
+		}
+	},2000);
+	
+	//	create all keys for settin_keys from custom
+	
+	//console.log(Object.keys(sails.config.custom.setting_keys));
+	await sails.config.custom.createSettingKeys();
+	
+	//sails.config.custom.updateImportantTimeStamps();
 
 };

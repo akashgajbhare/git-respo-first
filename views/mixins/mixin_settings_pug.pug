@@ -1,0 +1,26 @@
+mixin mixin_settings_pug(singular, singular_first_cap, plural, items)
+	.tile
+		h3.tile-title Manage !{plural}
+		.tile-body.row
+			.col-md-3.form-group.my-auto
+				label Enter/Edit !{singular_first_cap}
+				input.form-control(type='text', id=singular + '_text')
+				span.badge.badge-warning Text present here will not be saved
+			.col-md-1
+				div.my-auto.text-center
+					span.badge.badge-warning Add to List
+					button.btn.btn-primary(id=singular + '_right_btn', onclick=singular + '_right_clicked()')
+						i.fa.fa-chevron-right
+				br
+				div.my-auto.text-center
+					span.badge.badge-warning Pull from List
+					button.btn.btn-primary(id=singular + '_left_btn', onclick=singular + '_left_clicked()')
+						i.fa.fa-chevron-left
+			.col-md-3.my-auto.text-center.form-group
+				span.badge.badge-warning items present in this list will only get saved
+				br
+				select.form-control(id=singular + '_list', size=6)
+					each item in items
+						option(value=item)=item
+			.col-md-2.my-auto
+				button.btn.btn-primary(id=singular + '_save', onclick='save' + plural + '()') SAVE

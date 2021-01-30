@@ -1,0 +1,77 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'usercreate'
+	- var activeGroup = 'users'
+
+block title
+	title User Create
+
+block content
+	
+	.row
+		.col-md-3
+		.col-md-6
+			.tile
+				h3.tile-title #{user ? 'Edit' : 'Create'} User
+				.tile-body
+					form(action=user?'/useredit':'/usercreate', method='post', onsubmit='return validateForm()')
+						
+						if user
+							input(hidden, value=user.id, name='usercreate_id')
+						
+						.form-group
+							label.control-label Name
+							input#usercreate_name.form-control(type="text", placeholder="Enter Full Name", name='usercreate_name', autofocus, value=user ? user.name : '')
+
+						.row
+							.form-group.col-md-4
+								label.control-label Email
+								input#usercreate_email.form-control(type="email", placeholder="Enter Email Address", name='usercreate_email', value=user ? user.email : '')
+							.form-group.col-md-4
+								label.control-label Phone
+								input#usercreate_phone.form-control(type="text", placeholder="Enter Mobile Number", name="usercreate_phone", min='10', max='10', value=user ? user.phone : '')
+							.form-group.col-md-4
+								label(for='usercreate_role') Select User Role
+								select#usercreate_role.form-control(name='usercreate_role')
+									- let selected_role = user ? user.role : ''
+									- let role_options = sails.config.custom.roles;
+									- let show_role_options = false;
+									each role in role_options
+										if show_role_options
+											option(selected=(role===selected_role))=role
+										if role === requser.role
+											- show_role_options = true;
+							
+			
+						.row
+							.form-group.col-md-6
+								label.control-label Password
+								input#usercreate_password.form-control(type="password", placeholder="Enter Password", name='usercreate_password')
+
+							.form-group.col-md-6
+								label.control-label Re-enter Password
+								input#usercreate_password_reenter.form-control(type="password", placeholder="Re-enter Password", name='usercreate_password_reenter')
+							
+						.row
+							.form-group.col-md-2
+								button.btn.btn-primary(type="submit")
+									i.fa.fa-fw.fa-lg.fa-check-circle
+									| #{user ? 'Edit' : 'Add'}								
+		.col-md-3
+
+block specific-js
+	script(type='text/javascript', src='/js/validation.js')
+	script.
+		let validation_input = [
+			{tagid:'usercreate_name', regex_name: 'text', errmsg: 'Name must be of 3 - 50 character length', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid: 'usercreate_email', text: $('#usercreate_email').val(), regex_name: 'email', errmsg: 'Email address entered is invalid.', required: true},
+			{tagid:'usercreate_phone', regex_name: 'exact_x_digits', errmsg: 'Phone number must be of 10 digits', required: true, x_count: 10},
+			{tagid:'usercreate_password', regex_name: 'free_text', errmsg: 'Password should be minimum of 8 digits', min: 8, max: 100, required: true},
+			{tagid:'usercreate_password_reenter', regex_name: 'free_text', errmsg: 'Password should be minimum of 8 digits', min: 8, max: 100, required: true},
+			{tagid:'usercreate_password_reenter', tag2id:'usercreate_password', regex_name: 'equal', errmsg: 'Passwords must be same.'}
+		];
+			
+		function validateForm() {
+			return validate(validation_input);
+		}

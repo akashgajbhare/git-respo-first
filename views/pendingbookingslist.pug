@@ -1,0 +1,85 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'pendingbookinglist'
+	- var activeGroup = 'bookings'
+	- var allowed_to_approve_decline = sails.config.custom.holidayhomes_allowed_to_approve_decline[role];
+
+block title
+	title HH Pending Bookings
+
+block content
+	
+	.row
+		.col-md-12
+			.tile
+				.tile-body
+					table.table.table-hover.table-bordered#booking_list_table
+						thead
+							tr
+								th Name
+								th Holiday Home
+								th Date
+								th Days
+								th Rooms
+								th Status
+								if allowed_to_approve_decline
+									td Approve
+									td Decline
+								th Reason
+						tbody
+							each booking in bookinglist
+								tr(id=booking.id)
+									td=booking.member.membername
+									td=booking.holidayhome
+									td=sails.config.custom.getReadableDate(booking.date)
+									td=booking.days
+									td=booking.rooms
+									td
+										span.badge.badge-warning=booking.status
+									if allowed_to_approve_decline
+										td
+											button.btn.btn-sm.btn-outline-success(onclick='approvebooking("' + booking.id + '", true)') APPROVE
+										td
+											button.btn.btn-sm.btn-outline-danger(onclick='approvebooking("' + booking.id + '", false)') DECLINE
+									td=booking.reason
+block specific-js
+	// Data table plugin
+	include includes/datatable_js.pug
+	
+	script.
+		let booking_list_table = $('#booking_list_table').DataTable({
+			dom: 'lfrtBip',
+			buttons: [
+				'copy', 'csv', 'excel', 'pdf', 'print'
+			]
+		});
+	if allowed_to_approve_decline
+		script.
+			function approvebooking(bookingid, approve) {
+				swal({
+					title: (approve ? "Approval" : "Decline") + " Message", 
+					text: "Note: This message will be sent to the member.",
+					content: {
+						element: "input",
+						attributes: {
+							placeholder: "(Required)",
+						}
+					},
+				}).then((message) => {
+					if(message || message == null) {	//	we get value as null when the swal is closed by escape key
+						if(message != null) {
+							$.post('/approvebooking', {bookingid: bookingid, approve: approve, reason: message}, function(data) {
+								if(data.errormsg) {
+									swal(data.errormsg, "", "error");
+								} else {
+									booking_list_table.row($('#'+bookingid)).remove().draw();
+								}
+							});
+						}
+					} else {
+						//	Ask the user to fill the message
+						approvebooking(bookingid, approve);
+					}
+				});
+			}

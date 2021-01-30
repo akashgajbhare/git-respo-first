@@ -1,0 +1,156 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'content'
+	//- var activeGroup = 'pages'
+	
+block title
+	title Static Content
+	style.
+		body > #standalone-container {
+			margin: 50px auto;
+			max-width: 100%;
+		}
+		#editor-container {
+			height: 350px;
+		}
+
+
+block content
+	.app-title.row
+		.col-6
+			h1 Content Editor
+		.col-6
+			div.pull-right
+				label(for='select_content_to_edit') Select Content To Edit
+				select.form-control#select_content_to_edit
+					option(value='tnc') Terms & Conditions
+					option(value='contact_us') Contact Us
+					option(value='info') Info
+					option(value='board_members') Board Members
+
+	.row
+		.col-md-12
+			.tile
+				.tile-body
+					#standalone-container
+						#toolbar-container
+							span.ql-formats
+								select.ql-font
+								select.ql-size
+							span.ql-formats
+								button.ql-bold
+								button.ql-italic
+								button.ql-underline
+								button.ql-strike
+							//span.ql-formats
+								select.ql-color
+								select.ql-background
+							span.ql-formats
+								button.ql-script(value='sub')
+								button.ql-script(value='super')
+							span.ql-formats
+								button.ql-header(value='1')
+								button.ql-header(value='2')
+								button.ql-blockquote
+								//button.ql-code-block
+							span.ql-formats
+								button.ql-list(value='ordered')
+								button.ql-list(value='bullet')
+								button.ql-indent(value='-1')
+								button.ql-indent(value='+1')
+							span.ql-formats
+								button.ql-direction(value='rtl')
+								select.ql-align
+							span.ql-formats
+								button.ql-link
+								button.ql-image
+								button.ql-video
+								button.ql-formula
+							span.ql-formats
+								button.ql-clean
+						#editor-container
+						
+					button.btn.btn-primary.mt-3(onclick='saveContent()') Save
+
+			//.tile
+				.tile-body
+					#accordion
+						.card
+							#headingOne.card-header
+								h5.mb-0
+									button.btn.btn-link(data-toggle='collapse' data-target='#collapseOne' aria-expanded='true' aria-controls='collapseOne')
+										| Collapsible Group Item #1
+							#collapseOne.collapse.show(aria-labelledby='headingOne' data-parent='#accordion')
+								.card-body
+									| Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven&apos;t heard of them accusamus labore sustainable VHS.
+						//.card
+							#headingTwo.card-header
+								h5.mb-0
+									button.btn.btn-link.collapsed(data-toggle='collapse' data-target='#collapseTwo' aria-expanded='false' aria-controls='collapseTwo')
+										| Collapsible Group Item #2
+							#collapseTwo.collapse(aria-labelledby='headingTwo' data-parent='#accordion')
+								.card-body
+									| Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven&apos;t heard of them accusamus labore sustainable VHS.
+						//.card
+							#headingThree.card-header
+								h5.mb-0
+									button.btn.btn-link.collapsed(data-toggle='collapse' data-target='#collapseThree' aria-expanded='false' aria-controls='collapseThree')
+										| Collapsible Group Item #3
+							#collapseThree.collapse(aria-labelledby='headingThree' data-parent='#accordion')
+								.card-body
+									| Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven&apos;t heard of them accusamus labore sustainable VHS.
+									
+			
+
+
+block specific-js
+	script(type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js")
+	script(type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js")
+	script(type='text/javascript' src='/js/quill.min.js')
+	
+	script.
+		var quill = new Quill('#editor-container', {
+			modules: {
+				formula: true,
+				syntax: true,
+				toolbar: '#toolbar-container'
+			},
+			placeholder: 'Add your data here ...',
+			theme: 'snow'
+		});
+		
+		function getContentForSelectedContentOption() {
+			let select_content_to_edit = $('#select_content_to_edit option:selected').val();
+			$.post('/getcontentfor', {select_content_to_edit: select_content_to_edit}, function(data) {
+				if(data.errormsg) {
+					swal('Oops !',data.errormsg, 'error');
+				} else {
+					if(data.data) {
+						quill.setContents(data.data);
+					}
+				}
+			});
+		}
+		
+		function saveContent() {
+			let x = quill.getContents();
+			let select_content_to_edit = $('#select_content_to_edit option:selected').val();
+			$.post('/savecontentfor', {select_content_to_edit: select_content_to_edit, content: JSON.stringify(x)}, function(data) {
+				if(data.errormsg) {
+					swal('Oops !',data.errormsg, 'error');
+				} else {
+					swal('Saved', 'Your content is saved successfully', 'success');
+				}
+			});
+		}
+		
+		$('#select_content_to_edit').on('change', function() {
+			//alert(JSON.stringify(this.value));
+			//	Clear the editor and call for getting the new content and set it up.
+			quill.setText('');
+			getContentForSelectedContentOption();
+		});
+		
+		//	When running for the 1st time, we want that the default in the select should get populated.
+		getContentForSelectedContentOption();

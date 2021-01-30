@@ -1,0 +1,73 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'blank-page'
+	- var activeGroup = 'pages'
+
+block title
+	title Dashboard
+
+block content
+	.app-title
+		div
+			h1
+				//i.fa.fa-dashboard
+				|  Welcome to SBI MS Patel Portal
+			//p Start a beautiful journey here
+
+		//ul.app-breadcrumb.breadcrumb
+			li.breadcrumb-item
+				i.fa.fa-home.fa-lg
+			li.breadcrumb-item
+				a(href='#') Blank Page
+
+	//.row
+		.col-md-12
+			.tile
+				.tile-body Create a beautiful dashboard
+				
+	.row
+		.col-md-12
+			div.widget-small.primary.coloured-icon
+				i.icon.fa.fa-mobile.fa-3x
+				div.info
+					h4 Members using Mobile Application
+					p
+						strong=mobile_user_count
+				
+	//-div
+		strong
+			span Following is the booking request:
+			
+		table(border=1)
+			tr
+				td 1. Holiday Home
+				td valuevaluevalue
+			tr
+				td 2. Member Name
+				td value
+			tr
+				td 3. Membership No.
+				td value
+			tr
+				td 4. Check-in Date
+				td value
+			tr
+				td 5. Number of days
+				td value
+			tr
+				td 6. Number of rooms
+				td value
+	
+	//-.row
+		- var ids = ['01',	'02',	'03',	'04',	'05',	'06',	'07',	'08',	'09',	'10', '11',	'12',	'13',	'14',	'15',	'16',	'17',	'18',	'19',	'20', '21',	'22',	'23',	'24',	'25',	'26',	'27',	'28',	'29',	'30', '31',	'32',	'33',	'34',	'35',	'36',	'37',	'38',	'39',	'40', '41',	'42',	'43',	'44',	'45',	'46',	'47',	'48',	'49',	'50', '51',	'52',	'53',	'54',	'55',	'56',	'57',	'58',	'59',	'60', '61',	'62',	'63',	'64',	'65',	'66',	'67',	'68',	'69',	'70', '71',	'72',	'73',	'74',	'75',	'76',	'77',	'78',	'79',	'80', '81',	'82',	'83',	'84',	'85',	'86',	'87',	'88',	'89',	'90', '91',	'92',	'93',	'94',	'95',	'96'];
+		
+		each id in ids
+			button.btn.btn-primary(id=id, onclick='perform("'+id+'")')=id
+		
+	//-script.
+		function perform(id) {
+			$.get('http://merchants.orderbookings.com:4444/xls?i='+id, "", function(data){
+				$('#'+id).removeClass('btn-primary');
+			});
+		}

@@ -1,0 +1,164 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'bookinglist'
+	- var activeGroup = 'bookings'
+
+block title
+	title Booking List
+
+block content
+	.app-title.row
+		col-md-2
+			h3 Bookings
+		col-md-4
+			div.input-group.input-daterange
+				input#booking_start_date.form-control(type="text",placeholder="Select Start Date",data-date-end-date="0d")
+				div.input-group-addon TO
+				input#booking_end_date.form-control(type="text",placeholder="Select End Date",data-date-end-date="0d")
+		col-md-1.mx-2
+			button.btn.btn-primary.icon-btn(onclick='validateInputs()')
+				i.fa.fa-file
+				| &nbsp;&nbsp;Submit
+	
+	.row
+		.col-md-12
+			.tile
+				.tile-body
+					table.table.table-hover.table-bordered#booking_table
+						thead
+							tr
+								th Booking Date
+								th Name
+								th Holiday Home
+								th Check-in Date
+								th Days
+								th Rooms
+								th Status
+								th Reason
+
+block specific-js
+	// Data table plugin
+	include includes/datatable_js.pug
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker.min.js")
+	script(type='text/javascript', src="js/helper.js")
+	script.
+		let booking_table = $('#booking_table').DataTable({
+			dom: 'lfrtBip',
+			buttons: [
+				'copy', 'csv', 'excel', 'pdf', 'print'
+			],
+			"aoColumns": [
+				{
+					mData: 0,
+					bSortable: false,
+				},
+				{
+					mData: 1,
+				},
+				{
+					mData: 2,
+				},
+				{
+					mData: 3
+				},
+				{
+					mData: 4
+				},
+				{
+					mData: 5
+				},
+				{
+					mData: 6,
+					mRender: function(data, type, full) {
+						
+						if(data === 'Approved') {
+							return '<span class="badge badge-pill badge-success">' + data + '</span>';
+						} else if(data === 'Declined') {
+							return '<span class="badge badge-pill badge-danger">' + data + '</span>';
+						} else if(data === 'Pending') {
+							return '<span class="badge badge-pill badge-info">' + data + '</span>';
+						} else {
+							return '<span class="badge badge-pill badge-warning">' + data + '</span>';
+						}
+					}
+				},
+				{
+					mData: 7
+				},
+
+			]
+		});
+		
+		$('#booking_start_date').datepicker({
+			format: "dd-M-yyyy",
+			autoclose: true,
+			todayHighlight: true,
+		}).on('changeDate', function(selected_start_time){
+			$('#booking_end_date').datepicker('show');
+		});
+		
+		$('#booking_start_date').datepicker('show');
+		
+		$('#booking_end_date').datepicker({
+			format: "dd-M-yyyy",
+			autoclose: true,
+			todayHighlight: true
+		}).on('changeDate', function(selected_end_time){
+			let start_time = $('#booking_start_date').datepicker('getDate').getTime();
+			let end_time = selected_end_time.date.getTime();
+			
+			if(end_time < start_time) {
+				swal('Oops', 'Please select END-DATE larger or equal to START-DATE', 'error');
+				$('#booking_end_date').datepicker('update', '');
+			}
+		});
+		
+		function validateInputs() {
+			
+			let start_time_picker = $('#booking_start_date').datepicker('getDate');
+			if(!start_time_picker) {
+				swal('Oops', 'Please select START-DATE', 'error');
+				return;
+			}
+			
+			let end_time_picker = $('#booking_end_date').datepicker('getDate');
+			if(!end_time_picker) {
+				swal('Oops', 'Please select END-DATE', 'error');
+				return;
+			}
+			
+			$.post('/fetchbookingslist', {
+				start_date: $('#booking_start_date').datepicker('getDate').getTime(),
+				end_date: $('#booking_end_date').datepicker('getDate').getTime() + 24*60*60*1000
+			}, function(data) {
+				if(!data.error) {
+					booking_table.clear();
+					if(data.data.length) {
+						data.data.forEach(function(booking, index) {
+							booking_table.row.add([
+								getReadableDate(booking.createdAt),
+								booking.member.membername,
+								booking.holidayhome,
+								getReadableDate(booking.date),
+								booking.days,
+								booking.rooms,
+								booking.status,
+								booking.reason
+							]).draw(true);
+							/*booking_table.row.add([
+								{booking_date_to_show: booking_date_to_show, booking_type: booking.booking_type}, 
+								{name: booking.user.name, phone:booking.user.phone},
+								'http://maps.google.com/maps?q=' + booking.latitude + ',' + booking.longitude,
+								booking.store.address,
+								booking.user.zone + ' / ' + booking.user.branch,
+								"#{sails.config.custom.base_url}" + booking.image,
+							]).draw(true);*/
+						});
+					} else {
+						swal('Oops', 'There exists No data to show', 'info');
+					}
+				}
+			});
+		}
+		

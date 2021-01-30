@@ -1,0 +1,51 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'formcreate'
+	- var activeGroup = 'forms'
+
+block title
+	title Form Create
+
+block content
+	
+	.row
+		.col-md-3
+		.col-md-6
+			.tile
+				h3.tile-title #{form ? 'Edit' : 'Create'} Form
+				.tile-body
+					form(action=form?'/formedit':'/formcreate', method='post', enctype="multipart/form-data", onsubmit="return validateForm()")
+						
+						if form
+							input(hidden, value=form.id, name='formcreate_id')
+						
+						.form-group
+							strong
+								label.control-label Title
+							input#formcreate_title.form-control(type="text", placeholder="Enter Full Name", name='formcreate_title', autofocus, value=form ? form.title : '')
+					
+						.form-group
+							strong
+								label.control-label Document
+							input#upload_form.form-control(type="file", name='upload_form')
+
+						.form-group
+							button.btn.btn-primary(type="submit")
+								i.fa.fa-fw.fa-lg.fa-check-circle
+								| #{form ? 'Edit' : 'Upload'}
+								
+		.col-md-3
+
+block specific-js
+	script(type='text/javascript', src='/js/validation.js')
+	script.
+		let validation_input = [
+			{tagid:'formcreate_title', regex_name: 'text', errmsg: 'Title must be of 5-100 character length', required: true, min: 5, max: 100, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'upload_form', regex_name: 'filepath', errmsg: 'Please select a file', required: true},
+			//{tagid:'upload_form', regex_name: 'filepath', errmsg: 'Please select a file', required: true, namecheck: 'startswith', checkstring: 'naa'},
+		];
+			
+		function validateForm() {
+			return validate(validation_input);
+		}

@@ -7,7 +7,7 @@
 module.exports = {
     getUser: async function (req, res) {
         if(req.query.id){
-            let getDetails = await Users.find({ id : req.query.id }).catch(function (err) {
+            let getDetails = await Members.find({ id : req.query.id }).catch(function (err) {
                 res.json(sails.config.custom.jsonResponse("Something went wrong", null))
             })
             if (getDetails.length !== 0) {
@@ -28,7 +28,7 @@ module.exports = {
             else 
             {
                 if (req.query.userphone) {
-                    let getDetails = await Users.find({ contactNo: req.query.userphone }).catch(function (err) {
+                    let getDetails = await Members.find({ contactNo: req.query.userphone }).catch(function (err) {
                         res.json(sails.config.custom.jsonResponse("Something went wrong", null))
                     })
                     if (getDetails.length !== 0) {
@@ -68,7 +68,7 @@ module.exports = {
             let state = req.body.state
             let city = req.body.city
             let dob = req.body.dob
-            let createdUser = await Users.findOrCreate({
+            let createdUser = await Members.findOrCreate({
                 contactNo: contactno
             }, {
                 contactNo: contactno,
@@ -83,7 +83,7 @@ module.exports = {
             })
             console.log(createdUser);
             if (createdUser) {
-                let updateUser = await Users.update({
+                let updateUser = await Members.update({
                     id: createdUser.id
                 }, {
                     contactNo: contactno,
@@ -126,7 +126,7 @@ module.exports = {
                     console.log(uploadedFiles[0].fd);
                     
                     if(uploadedFiles.length !== 0){
-                        let userUpdate = Users.update({id : req.body.self_id}).set({photo: uploadedFiles[0].fd}).fetch()
+                        let userUpdate = Members.update({id : req.body.self_id}).set({photo: uploadedFiles[0].fd}).fetch()
                         .catch(function (err) {
                             console.log(err);
                             res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));

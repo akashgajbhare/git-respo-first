@@ -1,0 +1,53 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'upload_dbf'
+	- var activeGroup = 'upload'
+	- var upload_file_list = ['Branch', 'Member', 'Account', 'Opening Balance', 'Transaction', 'Holiday Homes', 'Loan', 'FDR'];
+	- var upload_file_name = ['BRANCH.DBF', 'MEMBER.DBF', 'ACCOUNT.DBF', 'OPENBAL.DBF', 'TRAN.DBF', 'HOLIHOME.DBF', 'LOAN.DBF', 'FDR.DBF'];
+	- let validation_rules = [];
+
+block title
+	title Upload DBF
+
+block content
+	//.app-title
+		div
+			h1
+				i.fa.fa-dashboard
+				|  Blank Page
+			p Start a beautiful journey here
+
+		ul.app-breadcrumb.breadcrumb
+			li.breadcrumb-item
+				i.fa.fa-home.fa-lg
+			li.breadcrumb-item
+				a(href='#') Blank Page
+
+	.row
+		.col-md-3
+		.col-md-6
+			.tile
+				.tile-title Upload files
+				.text.text-info.mb-3 The files should be uploaded in the sequence as expected.
+				form(action='/upload', method='post', enctype="multipart/form-data", onsubmit='return validateForm()')
+					each upload_file, index in upload_file_list
+						- validation_rules.push({tagid: upload_file.replace(' ', ''), regex_name: 'filepath', errmsg: 'Please select a file that ends with ' + upload_file_name[index], required: false, namecheck: 'endswith', checkstring: upload_file_name[index]})
+						.form-group.row
+							label.control-label.col-md-4.my-auto #{index+1 + '. ' + upload_file}
+							.col-md-8
+								//input.form-control(type="file", name='upload_'+ upload_file.toLowerCase().replace(' ', ''))
+								input.form-control(type="file", name='upload_files', accept='.dbf', id=upload_file.replace(' ', ''))
+								span.badge.badge-primary File name must end with #{upload_file_name[index]}
+								//input.form-control(type="file")
+					button.form-group.btn.btn-primary(type='submit') Upload
+		.col-md-3
+
+block specific-js
+	script(type='text/javascript', src='/js/validation.js')
+	script.
+		let validation_input = !{JSON.stringify(validation_rules)};
+			
+		function validateForm() {
+			return validate(validation_input);
+		}

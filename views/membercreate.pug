@@ -1,0 +1,96 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'membercreate'
+	- var activeGroup = 'members'
+
+block title
+	title User Create
+
+block content
+	
+	.row
+		.col-md-3
+		.col-md-6
+			.tile
+				h3.tile-title #{member ? 'Edit' : 'Create'} User
+				.tile-body
+					form(action=member?'/memberedit':'/membercreate', method='post', onsubmit='return validateForm()')
+						
+						if member
+							input(hidden, value=member.id, name='membercreate_id')
+						
+						.row
+							.form-group.col-md-4
+								label.control-label First Name
+								input#membercreate_fname.form-control(type="text", placeholder="Enter First Name", name='membercreate_fname', autofocus, value=member ? member.first_Name : '')
+							.form-group.col-md-4
+								label.control-label Middle Name
+								input#membercreate_mname.form-control(type="text", placeholder="Enter Middle Name", name='membercreate_mname', autofocus, value=member ? member.middle_Name : '')
+								
+							.form-group.col-md-4
+								label.control-label Last Name
+								input#membercreate_lname.form-control(type="text", placeholder="Enter Last Name", name='membercreate_lname', autofocus, value=member ? member.last_Name : '')
+
+						.row
+							.form-group.col-md-6
+								label.control-label Date of Birth
+								input#membercreate_dob.form-control(type="date", placeholder="Enter DOB", name='membercreate_dob', value=member ? member.dob : '')
+							.form-group.col-md-6
+								label.control-label Phone
+								input#membercreate_phone.form-control(type="text", placeholder="Enter Mobile Number", name="membercreate_phone", min='10', max='10', value=member ? member.contactNo : '')
+							//- .form-group.col-md-4
+							//- 	label(for='membercreate_role') Select User Role
+							//- 	select#membercreate_role.form-control(name='membercreate_role')
+							//- 		- let selected_role = member ? member.role : ''
+							//- 		- let role_options = sails.config.custom.roles;
+							//- 		- let show_role_options = false;
+							//- 		each role in role_options
+							//- 			if show_role_options
+							//- 				option(selected=(role===selected_role))=role
+							//- 			if role === requser.role
+							//- 				- show_role_options = true;
+							
+						.form-group
+								label.control-label Address
+								textarea#membercreate_address.form-control(name="membercreate_address", placeholder="Enter Full Address", rows="3", cols="30", value = member ? member.address : '')
+									| #{member ? member.address : null }								
+								
+								//- input#membercreate_address.form-control(type="text", placeholder="Enter Full Address", name='membercreate_address', value=member ? member.address : '')
+						.row
+							.form-group.col-md-4
+								label.control-label State
+								input#membercreate_state.form-control(type="text", placeholder="Enter State", name='membercreate_state', value=member ? member.state : '')
+
+							.form-group.col-md-4
+								label.control-label City
+								input#membercreate_city.form-control(type="text", placeholder="Enter City", name='membercreate_city', value=member ? member.city : '')
+							
+							.form-group.col-md-4
+								label.control-label Pincode
+								input#membercreate_pincode.form-control(type="text", placeholder="Enter Pincode", name='membercreate_pincode', value=member ? member.pincode : '')
+						.row
+							.form-group.col-md-2
+								button.btn.btn-primary(type="submit")
+									i.fa.fa-fw.fa-lg.fa-check-circle
+									| #{member ? 'Edit' : 'Add'}								
+		.col-md-3
+
+block specific-js
+	script(type='text/javascript', src='/js/validation.js')
+	console.log()
+	script.
+		let validation_input = [
+			{tagid:'membercreate_fname', regex_name: 'text', errmsg: 'Name must be of 3 - 50 character length', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_mname', regex_name: 'text', errmsg: 'Name must be of 3 - 50 character length', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_lname', regex_name: 'text', errmsg: 'Name must be of 3 - 50 character length', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_address', regex_name: 'text', errmsg: 'Name must be of 1 - 100 character length', required: true, min: 1, max: 100, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_state', regex_name: 'text', errmsg: 'Name must be of 1 - 50 character length', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_city', regex_name: 'text', errmsg: 'Name must be of 1 - 50 character length', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_phone', regex_name: 'exact_x_digits', errmsg: 'Phone number must be of 10 digits', required: true, x_count: 10},
+			{tagid:'membercreate_pincode', regex_name: 'exact_x_digits', errmsg: 'Pincode number must be of 5 digits', required: true, x_count: 5},
+		];
+			
+		function validateForm() {
+			return validate(validation_input);
+		}

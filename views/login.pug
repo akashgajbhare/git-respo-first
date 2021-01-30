@@ -1,0 +1,89 @@
+doctype html
+html
+	head
+		include includes/_head.pug
+		title Login
+
+	body
+		section.material-half-bg1
+			.cover
+
+		section.login-content
+			.logo
+				img(src='images/logo.png' style='height: 130px')
+
+			.login-box
+				form.login-form(action="/login", method='post', onsubmit='return loginValidateInputs();')
+					h2.text-center
+						i.fa.fa-lg.fa-fw.fa-user
+						| SIGN IN
+						
+					if message
+						.form-group
+							span.badge.badge-danger=message
+							
+					.form-group
+						label.control-label EMAIL
+						input#login_email.form-control(type="text", placeholder="Email", autofocus, name='username', value='')
+						
+					.form-group
+						label.control-label PASSWORD
+						input#login_password.form-control(type="password", placeholder="Password", name='password', value='')
+
+					.form-group
+						.utility
+							//.animated-checkbox
+								label
+									input(type="checkbox")
+									span.label-text Stay Signed in
+							p.semibold-text.mb-2
+								a(href="#" data-toggle="flip") Forgot Password ?
+
+					.form-group.btn-container
+						button.btn.btn-primary.btn-block
+							i.fa.fa-sign-in.fa-lg.fa-fw
+							| SIGN IN
+
+				form.forget-form(method='post', action="/passwordresetreq", onclick="return resetValidateInputs()")
+					h3.login-head
+						i.fa.fa-lg.fa-fw.fa-lock
+						| Forgot Password ?
+					.form-group
+						label.control-label EMAIL
+						input.form-control#reset_email(type="text", placeholder="Email", name='reset_email')
+
+					.form-group.btn-container
+						button.btn.btn-primary.btn-block
+							i.fa.fa-unlock.fa-lg.fa-fw
+							| RESET
+
+					.form-group.mt-3
+						p.semibold-text.mb-0
+							a(href="#" data-toggle="flip") <i class="fa fa-angle-left fa-fw"></i> Back to Login
+
+		include includes/_javascript.pug
+
+		script(type='text/javascript', src="/js/validation.js")
+		script.
+			// Login Page Flipbox control
+			$('.login-content [data-toggle="flip"]').click(function() {
+				$('.login-box').toggleClass('flipped');
+				return false;
+			});
+			
+			let login_validation_rules = [
+				{tagid: 'login_email',		regex_name: 'email', 	 errmsg: 'Please enter a valid email address', required: true},
+				{tagid: 'login_password', 	regex_name: 'free_text', errmsg: 'Password must be between 8 - 50 characters long', min: 8, max: 50, required: true},
+			];
+
+			function loginValidateInputs() {
+				return validate(login_validation_rules);
+			}
+			
+			let reset_validation_rules = [
+				{tagid: 'reset_email',		regex_name: 'email', 	 errmsg: 'Please enter a valid email address', required: true},
+			];
+
+			function resetValidateInputs() {
+				return validate(reset_validation_rules);
+			}

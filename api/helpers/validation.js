@@ -1,4 +1,4 @@
-const { validate } = require('./../../assets/js/validation');
+const { validate } = require('./../../assets/js/validation.js');
 module.exports = {
 
 

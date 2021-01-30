@@ -25,9 +25,17 @@ module.exports.views = {
   *                                                                          *
   ***************************************************************************/
 
-  // extension: 'ejs',
+	// extension: 'ejs',  	
+	extension: 'pug',
+	getRenderFn: function() {
+		var cons = require('consolidate');
+		return cons.pug;
+	},
 
-  /***************************************************************************
+  
+
+ 
+ /***************************************************************************
   *                                                                          *
   * The path (relative to the views directory, and without extension) to     *
   * the default layout file to use, or `false` to disable layouts entirely.  *

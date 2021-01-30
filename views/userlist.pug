@@ -1,0 +1,107 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'userlist'
+	- var activeGroup = 'users'
+
+block title
+	title User List
+
+block content
+	
+	.row
+		.col-md-12
+			.tile
+				.tile-body
+					table.table.table-hover.table-bordered#user_list_table
+						thead
+							tr
+								th Name
+								th Email
+								th Phone
+								th Address
+								th Role
+								th Status
+								if sails.config.custom.user_create[req.user.role]
+									th Edit
+									//th Delete
+						tbody
+							each user in userlist
+								tr(id=user.id)
+									td
+										div=user.name
+									td
+										div=user.email
+									td
+										div=user.phone
+									td 
+										div="Address"
+									td=user.role
+									if sails.config.custom.user_create[req.user.role]
+										td
+											.toggle-flip
+												label
+													input(type="checkbox", checked=user.enabled, id='checkbox_'+user.id)
+													span.flip-indecator(data-toggle-on="ENABLED", data-toggle-off="DISABLED", style="width:100px", onclick='toggleUserStatus("'+ user.id + '")')
+										td
+											a(href='/useredit/' +user.id) 
+												i.fa.fa-pencil.btn
+										//td
+											i.fa.fa-trash-o.btn
+									else
+										td
+											span(class=user.enabled ? "badge badge-primary" : "badge badge-secondary")=user.enabled ? 'ENABLED' : 'DISABLED'
+										
+						
+block specific-js
+	// Data table plugin
+	include includes/datatable_js.pug
+	
+	script.
+		let user_list_table = $('#user_list_table').DataTable({
+			dom: 'lfrtBip',
+			buttons: [
+				'copy', 'csv', 'excel', 'pdf', 'print'
+			]
+		});
+		
+	if sails.config.custom.user_create[req.user.role]
+		script.
+			$('#user_list_table tbody').on( 'click', 'i.fa-trash-o', function () {
+				console.log('clicked');
+				let row = $(this).parents('tr');
+				let userid = row.attr('id');
+				swal({
+					title: "Are you sure?",
+					text: "Once deleted, you will not be able to recover this user!",
+					icon: "warning",
+					buttons: true,
+					dangerMode: true,
+				}, function(willDelete) {
+					if (willDelete) {
+						$.post('/userdelete', {userid: userid}, function(response) {
+							console.log(response);
+							if(response.errormsg) {
+								swal( "Oops", response.errormsg, "error");
+							}
+							else {
+								swal("Poof! Your user has been deleted!", {icon: "success",});
+								user_list_table
+									.row(row)
+									.remove()
+									.draw();
+							}
+						});
+					}
+				});
+			} );
+
+			function toggleUserStatus(userid) {
+				let originally_checked = $('#checkbox_'+userid).prop('checked');
+				$.post('/useractivestatus', {userid: userid, set_user_status: !originally_checked}, function(response) {
+					if(response.errormsg) {
+						$('#'+userid).prop('checked', originally_checked);
+						swal( "Oops", response.errormsg, "error");
+					}
+				});
+			}

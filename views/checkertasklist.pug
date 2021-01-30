@@ -1,0 +1,152 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'checkertasklist'
+	- var activeGroup = 'checker'
+
+block title
+	title Cheker Task List
+
+block content
+	.app-title.row
+		col-md-2
+			h3 Checkers Tasks
+		col-md-4
+			div.input-group.input-daterange
+				input#checkertask_start_date.form-control(type="text",placeholder="Select Start Date",data-date-end-date="0d")
+				div.input-group-addon TO
+				input#checkertask_end_date.form-control(type="text",placeholder="Select End Date",data-date-end-date="0d")
+		col-md-1.mx-2
+			button.btn.btn-primary.icon-btn(onclick='validateInputs()')
+				i.fa.fa-file
+				| &nbsp;&nbsp;Submit
+	
+	.row
+		.col-md-12
+			.tile
+				.tile-body
+					table.table.table-hover.table-bordered#checkertask_table
+						thead
+							tr
+								th Created On
+								th Created By
+								th Approved On
+								th Approved By
+								th Completed On
+								th Maker Data
+								th Status
+								th Reason
+
+
+block specific-js
+	// Data table plugin
+	include includes/datatable_js.pug
+	script(type='text/javascript', src="js/plugins/bootstrap-datepicker.min.js")
+	script(type='text/javascript', src="js/helper.js")
+	script.
+		let checkertask_table = $('#checkertask_table').DataTable({
+			dom: 'lfrtBip',
+			buttons: [
+				'copy', 'csv', 'excel', 'pdf', 'print'
+			],
+			"aoColumns": [
+				{
+					mData: 0,
+					bSortable: false,
+				},
+				{
+					mData: 1,
+				},
+				{
+					mData: 2,
+				},
+				{
+					mData: 3
+				},
+				{
+					mData: 4
+				},
+				{
+					mData: 5,
+					mRender: function(data, type, full) {
+						
+						if(data.job_type === 'fileupload') {
+							let url = !{'"' + sails.config.custom.base_url + '"'} ;
+							let slice_length = !{sails.config.appPath.length};
+							return '<button class="btn btn-sm btn-outline-primary"> <a href="' + url + data.job_inputs.slice(slice_length) +'">Download</a></button>';
+						}
+					}
+				},
+				{
+					mData: 6
+				},
+				{
+					mData: 7
+				}
+			]
+		});
+		
+		$('#checkertask_start_date').datepicker({
+			format: "dd-M-yyyy",
+			autoclose: true,
+			todayHighlight: true,
+		}).on('changeDate', function(selected_start_time){
+			$('#checkertask_end_date').datepicker('show');
+		});
+		
+		$('#checkertask_start_date').datepicker('show');
+		
+		$('#checkertask_end_date').datepicker({
+			format: "dd-M-yyyy",
+			autoclose: true,
+			todayHighlight: true
+		}).on('changeDate', function(selected_end_time){
+			let start_time = $('#checkertask_start_date').datepicker('getDate').getTime();
+			let end_time = selected_end_time.date.getTime();
+			
+			if(end_time < start_time) {
+				swal('Oops', 'Please select END-DATE larger or equal to START-DATE', 'error');
+				$('#checkertask_end_date').datepicker('update', '');
+			}
+		});
+		
+		function validateInputs() {
+			
+			let start_time_picker = $('#checkertask_start_date').datepicker('getDate');
+			if(!start_time_picker) {
+				swal('Oops', 'Please select START-DATE', 'error');
+				return;
+			}
+			
+			let end_time_picker = $('#checkertask_end_date').datepicker('getDate');
+			if(!end_time_picker) {
+				swal('Oops', 'Please select END-DATE', 'error');
+				return;
+			}
+			
+			$.post('/fetchcheckertasklist', {
+				start_date: $('#checkertask_start_date').datepicker('getDate').getTime(),
+				end_date: $('#checkertask_end_date').datepicker('getDate').getTime() + 24*60*60*1000
+			}, function(data) {
+				if(!data.error) {
+					checkertask_table.clear();
+					if(data.data.length) {
+						data.data.forEach(function(task, index) {
+							checkertask_table.row.add([
+								getReadableDate(task.createdAt, true),
+								task.created_by,
+								getReadableDate(task.approved_on, true),
+								task.approved_by,
+								getReadableDate(task.completed_on, true),
+								{job_inputs: task.job_inputs, job_type: task.job_type},
+								task.job_status,
+								task.reason
+							]).draw(true);
+						});
+					} else {
+						swal('Oops', 'There exists No data to show', 'info');
+					}
+				}
+			});
+		}
+		

@@ -15,7 +15,25 @@
     "sails-hook-sockets": "^2.0.0",
     "sails-mongo": "^1.2.0",
     "winston": "^3.3.3",
-    "winston-daily-rotate-file": "^4.5.0"
+    "winston-daily-rotate-file": "^4.5.0",
+    "bcrypt-nodejs": "0.0.3",
+    "better-queue": "^3.8.10",
+    "consolidate": "^0.15.1",
+    "dbf-parser": "0.0.1",
+    "fcm-node": "^1.5.1",
+    "hash.js": "^1.1.7",
+    "jsonwebtoken": "^8.5.1",
+    "lnk": "^1.1.0",
+    "md5": "^2.2.1",
+    "mkdirp": "^0.5.1",
+    "node-xlsx": "^0.15.0",
+    "nodemailer": "^6.2.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7",
+    "pug": "^2.0.3",
+    "quill-delta-to-html": "^0.10.11",
+    "shelljs": "^0.8.3"
   },
   "devDependencies": {
     "eslint": "5.16.0"

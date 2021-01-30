@@ -1,0 +1,47 @@
+doctype html
+html
+	head
+		include includes/_head.pug
+		title Register
+
+	body
+		section.material-half-bg
+			.cover
+
+		section.login-content
+			.logo: h1 Vali
+
+			.login-box
+				form#register_form.login-form(action="/register", method='post', data-parsley-validate="")
+					h3.login-head
+						i.fa.fa-lg.fa-fw.fa-user
+						| Register
+					.form-group
+						label.control-label Name
+						input#register_name.form-control(type="text", placeholder="Name", autofocus, name='register_name')
+						
+					.form-group
+						label.control-label Email
+						input#register_email.form-control(type="email", placeholder="Email", autofocus, name='register_email', data-parsley-type="email", required)
+					
+					.form-group
+						label.control-label Phone
+						input#register_phone.form-control(type="text", placeholder="Phone", autofocus, name='register_phone')
+
+					.form-group
+						label.control-label PASSWORD
+						input#register_password.form-control(type="password", placeholder="Password", name='register_password')
+					
+					.form-group.btn-container
+						button.btn.btn-primary.btn-block
+							i.fa.fa-sign-in.fa-lg.fa-fw
+							| REGISTER
+
+		include includes/_javascript.pug
+
+		script.
+			$('#register_form').parsley().on('field:validated', function() {
+				var ok = $('.parsley-error').length === 0;
+			}).on('form:submit', function() {
+				return false; // Don't submit form for this demo
+			});

@@ -1,0 +1,182 @@
+html
+	head
+	body(style='font-family: Arial; background-color: grey')
+		div(style='width: 900px; margin: auto; border: 1px solid black; background-color: white')
+			table(style='background-color: red; width: 100%')
+				col(width='20')
+				col(width='80')
+				tr
+					td
+						img(src='images/logo.png' style='width:100%')
+					td(style='text-align:center')
+						div
+							b STATE BANK OF EMPLOYEES' (M.S.PATEL) CO-OPERATIVE CREDIT SOCIETY LTD., MUMBAI
+						div (Regd. No. 6527/29)
+						div(style='font-size: 12px') STATE BANK OF INDIA, MUMBAI MAIN BRANCH BUILDING, 3RD FLOOR, MUMBAI SAMACHAR MARG, FORT, MUMBAI - 400023
+						div(style='font-size: 12px') Website: www.sbimspatel.com	| E-mail: info@sbimspatel.com | Tel: 22664360-22661780
+						div(style='font-size: 26px')
+							b Statement for the year #{sails.config.custom.fullYearOfLastFYApril}-#{sails.config.custom.fullYearOfThisFYApril}
+			hr
+			
+			table(style='background-color: yellow; width: 100%; font-size: 14px')
+				col(width='33')
+				col(width='33')
+				col(width='33')
+				tr
+					td(valign='top')
+						div 
+							b Membership No.
+							span=member.membershipno
+						div 
+							b Membership Date: 
+							span=sails.config.custom.getReadableDate(member.joindate, false, '/')
+						
+						div 
+							b Name: 
+							span=member.membername
+						div 
+							b Desig: 
+							span=member.designation
+						div 
+							b Branch: 
+							if branch
+								span=branch.branchname
+								div=branch.branchaddr1
+								div=branch.branchaddr2
+								div=branch.branchaddr3 + ' ,' + branch.branchpin
+							
+				
+					td(valign='top')
+						div 
+							b Date of Birth: 
+							span=span=sails.config.custom.getReadableDate(member.birthdate, false, '/')
+						div 
+							b Date of Joining(Bank): 
+							span=span=sails.config.custom.getReadableDate(member.joindate, false, '/')
+						div 
+							b P.F.Index No.: 
+							span=member.pfindex?member.pfindex:'NA'
+						div 
+							b Shares Amount: 
+							if share_capital
+								- let total = share_capital[0].balance;
+								if share_capital[0].transactions
+									each transaction in share_capital[0].transactions
+										- total += transaction.amount
+								span=total.toLocaleString('en-IN')
+							else
+								span --Nil--
+						div 
+							b Sundry Balance: 
+							if sundry_balance
+								- let total = sundry_balance[0].balance;
+								if sundry_balance[0].transactions
+									each transaction in sundry_balance[0].transactions
+										- total += transaction.amount
+								span=total.toLocaleString('en-IN')
+							else
+								span --Nil--
+						div 
+							b Bank Account No: 
+							span=member.bankacc
+						div 
+							b Nominee: 
+							span=member.nominee
+					
+					td(valign='top')
+						div
+							b Residential Address: 
+							div=member.ressaddr1
+							div=member.ressaddr2
+							div=member.ressaddr3
+							div=member.resspin
+			
+			//-	If we have number of columns less than 6 (thats the max we can support from design and look perspective) then show as many columns, if the number of columns is more than 6, then see if the column counts is odd or even. If odd, then add 1 and divide by 2. If even divide by two. We will get as many tables
+			- let max_accounts_in_row = openingBalance.length > 6 ? ((openingBalance.length % 2 === 0) ? openingBalance.length : (openingBalance.length + 1))/2 : openingBalance.length;
+			
+			while openingBalance.length > 0
+				- let accounts_list = openingBalance.splice(0, max_accounts_in_row);
+				- let max_accounts = accounts_list.length;
+				- let max_transactions = 0
+				each item in accounts_list
+					if item.transactions.length > max_transactions
+						- max_transaction = item.transactions.length
+
+				table(style='background-color: pink; width: 100%')
+					tr
+						//td(colspan=openingBalance.length*3)
+						td(colspan=max_accounts_in_row*3)
+							hr
+
+					tr
+						each item in accounts_list
+							td(colspan=3 align='center')
+								b=item.account_name
+
+					tr
+						//td(colspan=openingBalance.length*3)
+						td(colspan=max_accounts_in_row*3)
+							hr
+
+					tr(style='font-size:12px')
+						each item, index in accounts_list
+							td(align='right')
+								b Opn.Bal.
+							td(align='right')
+								b=Math.abs(item.balance).toLocaleString('en-IN')
+							td(align='right' style=index < accounts_list.length-1 ? 'border-right: 1px solid' : '')
+
+					- let row = 0;
+					while row < max_transaction
+						tr(style='font-size:12px')
+							- let account = 0;
+							while account < max_accounts
+								if accounts_list[account].transactions.length > row
+									td(align='right')=sails.config.custom.getReadableDate(accounts_list[account].transactions[row].valuedate, false, '/')
+									td(align='right')=Math.abs(accounts_list[account].transactions[row].amount).toLocaleString('en-IN')
+									td(align='right' style=account < max_accounts-1 ? 'border-right: 1px solid' : '')=accounts_list[account].transactions[row].drcr
+								else
+									td(align='right')
+									td(align='right')
+									td(align='right' style=account < max_accounts-1 ? 'border-right: 1px solid' : '')
+								- account++
+						- row++
+					tr
+						//td(colspan=openingBalance.length*3)
+						td(colspan=max_accounts_in_row*3)
+							hr
+					tr(style='font-size:12px')
+						each item in accounts_list
+							- closing_balance = item.balance;
+							each transaction in item.transactions
+								if transaction.drcr == 'DR'
+									- closing_balance -= transaction.amount
+								else if transaction.drcr == 'CR'
+									- closing_balance += transaction.amount
+
+							td(align='right')
+								b Clo.Bal.
+							td(align='right')
+								b=Math.abs(closing_balance).toLocaleString('en-IN')
+							td(align='right')
+
+					tr
+						//td(colspan=openingBalance.length*3)
+						td(colspan=max_accounts_in_row*3)
+							hr
+			
+			table(style='background-color: orange; width: 100%; font-size: 12px')
+				tr
+					td
+						b SURETY TO OTHERS: 
+						if surety_by_me.length > 0
+							each surety in surety_by_me
+								span=surety.memberid + ' - ' + surety.membername + ', '
+						else
+							span None
+				tr
+					td
+						b Note: 
+						span Discrepencies if any should be intimated to the Society's office within 30 days in writing. This is a computer generated statement. Dividend will be credited to above mentioned Bank Account Number
+						
+			

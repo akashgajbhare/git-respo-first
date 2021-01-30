@@ -1,0 +1,36 @@
+mixin mixin_settings_js(singular, plural)
+	script.
+		function save!{plural}() {
+			var !{singular}_list = $("#!{singular}_list option").map(function() { return $(this).text(); });
+
+			if(!{singular}_list.length === 0) {
+				swal('Oops', 'There are no !{plural} to save, please add them before saving.', 'error');
+			}
+
+			//console.log(!{singular}_list.get());
+			$.post('/associationsave#{plural}', {setting_!{singular}_list: !{singular}_list.get()}, function(response) {
+				location.reload();
+			});
+		}
+
+		function !{singular}_right_clicked() {
+			let !{singular}_text = $('#!{singular}_text').val();
+			if(!{singular}_text.length === 0) {
+				swal('Ooops', 'Please enter some !{singular} before adding', 'error');
+				return;
+			}
+
+			$('#!{singular}_list').append('<option value="' + !{singular}_text + '">' + !{singular}_text + '</option>');
+			$('#!{singular}_text').val('');
+		}
+
+		function !{singular}_left_clicked() {
+			let !{singular}_text_jq = $('#!{singular}_list option:selected');
+			if(!!{singular}_text_jq.text()) {
+				swal('Ooops', 'Please select a !{singular} to edit', 'error');
+				return;
+			}
+
+			$('#!{singular}_text').val(!{singular}_text_jq.text());
+			!{singular}_text_jq.remove();
+		}

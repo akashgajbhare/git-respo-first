@@ -1,0 +1,111 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'memberlist'
+	- var activeGroup = 'members'
+
+block title
+	title User List
+
+block content
+	
+	.row
+		.col-md-12
+			.tile
+				.tile-body
+					table.table.table-hover.table-bordered#member_list_table
+						thead
+							tr
+								th Name
+								th Phone
+								th Address
+								th Pincode
+								th City
+								th State
+								th Date of Birth
+								th Status
+								if sails.config.custom.user_create[sails.config.custom.roles[0]]
+									th Edit
+									//th Delete
+						tbody
+							each member in memberlist
+								tr(id=member.id)
+									td
+										div=member.first_Name+ ' ' + member.middle_Name+ ' ' + member.last_Name
+									td
+										div=member.contactNo
+									td
+										div=member.address
+									td 
+										div=member.pincode
+									td=member.city
+									td=member.state
+									td=member.dob
+									if sails.config.custom.user_create[sails.config.custom.roles[0]]
+										td
+											.toggle-flip
+												label
+													input(type="checkbox", checked=member.enabled, id='checkbox_'+member.id)
+													span.flip-indecator(data-toggle-on="ENABLED", data-toggle-off="DISABLED", style="width:100px", onclick='toggleUserStatus("'+ member.id + '")')
+										td
+											a(href='/memberedit/' +member.id) 
+												i.fa.fa-pencil.btn
+										//td
+											i.fa.fa-trash-o.btn
+									else
+										td
+											span(class=member.enabled ? "badge badge-primary" : "badge badge-secondary")=member.enabled ? 'ENABLED' : 'DISABLED'
+										
+						
+block specific-js
+	// Data table plugin
+	include includes/datatable_js.pug
+	
+	script.
+		let member_list_table = $('#member_list_table').DataTable({
+			dom: 'lfrtBip',
+			buttons: [
+				'copy', 'csv', 'excel', 'pdf', 'print'
+			]
+		});
+		
+	if sails.config.custom.user_create[sails.config.custom.roles[0]]
+		script.
+			$('#member_list_table tbody').on( 'click', 'i.fa-trash-o', function () {
+				console.log('clicked');
+				let row = $(this).parents('tr');
+				let memberid = row.attr('id');
+				swal({
+					title: "Are you sure?",
+					text: "Once deleted, you will not be able to recover this member!",
+					icon: "warning",
+					buttons: true,
+					dangerMode: true,
+				}, function(willDelete) {
+					if (willDelete) {
+						$.post('/memberdelete', {memberid: memberid}, function(response) {
+							console.log(response);
+							if(response.errormsg) {
+								swal( "Oops", response.errormsg, "error");
+							}
+							else {
+								swal("Poof! Your member has been deleted!", {icon: "success",});
+								member_list_table
+									.row(row)
+									.remove()
+									.draw();
+							}
+						});
+					}
+				});
+			} );
+
+			function toggleUserStatus(memberid) {
+				let originally_checked = $('#checkbox_'+memberid).prop('checked');
+				$.post('/memberactivestatus', {memberid: memberid, set_member_status: !originally_checked}, function(response) {
+					if(response.errormsg) {
+						$('#'+memberid).prop('checked', originally_checked);
+						swal( "Oops", response.errormsg, "error");
+					}
+				});
+			}

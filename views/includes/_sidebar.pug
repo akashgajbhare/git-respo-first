@@ -1,0 +1,114 @@
+.app-sidebar__overlay(data-toggle="sidebar")
+aside.app-sidebar
+	.app-sidebar__user
+		img.app-sidebar__user-avatar(src='/images/avatar.png', alt='User Image')
+		div
+			p.app-sidebar__user-name=req.user ? req.user.name : 'John Doe'
+			p.app-sidebar__user-designation=req.user ? req.user.role : 'Frontend Developer'
+
+	ul.app-menu
+		li
+			a.app-menu__item(href='/' class={'active': activePage == 'dashboard'})
+				i.app-menu__icon.fa.fa-dashboard
+				span.app-menu__label Dashboard
+
+		if sails.config.custom.user_create[req.user.role]
+			li.treeview(class={'is-expanded': activeGroup == 'members'})
+				a.app-menu__item(href='#', data-toggle='treeview')
+					i.app-menu__icon.fa.fa-user-circle-o
+					span.app-menu__label Members
+					i.treeview-indicator.fa.fa-angle-right
+				ul.treeview-menu
+					li
+						a.treeview-item(href='/memberlist' class={'active': activePage == 'memberlist'})
+							i.icon.fa.fa-users
+							|  Members List
+					li
+						a.treeview-item(href='/membercreate', class={'active': activePage == 'membercreate'})
+							i.icon.fa.fa-user-plus
+							|  Add Members
+
+	
+			if sails.config.custom.user_create[req.user.role]
+			li.treeview(class={'is-expanded': activeGroup == 'users'})
+				a.app-menu__item(href='#', data-toggle='treeview')
+					i.app-menu__icon.fa.fa-user-circle-o
+					span.app-menu__label Users
+					i.treeview-indicator.fa.fa-angle-right
+				ul.treeview-menu
+					li
+						a.treeview-item(href='/userlist' class={'active': activePage == 'userlist'})
+							i.icon.fa.fa-users
+							|  User List
+					li
+						a.treeview-item(href='/usercreate', class={'active': activePage == 'usercreate'})
+							i.icon.fa.fa-user-plus
+							|  Create User
+		else
+			li
+				a.app-menu__item(href='/userlist' class={'active': activePage == 'userlist'})
+					i.app-menu__icon.fa.fa-users
+					span.app-menu__label User List
+		
+		if sails.config.custom.form_create[req.user.role]
+			li.treeview(class={'is-expanded': activeGroup == 'forms'})
+				a.app-menu__item(href='#', data-toggle='treeview')
+					i.app-menu__icon.fa.fa-file
+					span.app-menu__label Forms
+					i.treeview-indicator.fa.fa-angle-right
+				ul.treeview-menu
+					li
+						a.treeview-item(href='/formlist' class={'active': activePage == 'formlist'})
+							i.icon.fa.fa-file-text
+							|  Form List
+					li
+						a.treeview-item(href='/formcreate', class={'active': activePage == 'formcreate'})
+							i.icon.fa.fa-file-o
+							|  Create Form
+
+		li.treeview(class={'is-expanded': activeGroup == 'bookings'})
+			a.app-menu__item(href='#', data-toggle='treeview')
+				i.app-menu__icon.fa.fa-globe
+				span.app-menu__label Holiday Home Bookings
+				i.treeview-indicator.fa.fa-angle-right
+			ul.treeview-menu
+				li
+					a.treeview-item(href='/pendingbookingslist' class={'active': activePage == 'pendingbookinglist'})
+						i.icon.fa.fa-hourglass
+						|  Pending List
+				li
+					a.treeview-item(href='/bookingslist', class={'active': activePage == 'bookinglist'})
+						i.icon.fa.fa-hourglass-end
+						|  History
+
+		//li
+			a.app-menu__item(href='/enquirylist' class={'active': activePage == 'enquirylist'})
+				i.app-menu__icon.fa.fa-question
+				span.app-menu__label Enquiries
+		if sails.config.custom.upload_files[req.user.role]
+			li
+				a.app-menu__item(href='/upload' class={'active': activePage == 'upload_dbf'})
+					i.app-menu__icon.fa.fa-upload
+					span.app-menu__label Upload DBF
+				
+		li.treeview(class={'is-expanded': activeGroup == 'checker'})
+			a.app-menu__item(href='#', data-toggle='treeview')
+				i.app-menu__icon.fa.fa-check
+				span.app-menu__label Checker Tasks
+				i.treeview-indicator.fa.fa-angle-right
+			ul.treeview-menu
+				li
+					a.treeview-item(href='/pendingcheckertasks' class={'active': activePage == 'pendingcheckertasks'})
+						i.icon.fa.fa-list
+						|  Pending Tasks
+				li
+					a.treeview-item(href='/checkertasklist' class={'active': activePage == 'checkertasklist'})
+						i.icon.fa.fa-tasks
+						|  All Tasks
+
+		if sails.config.custom.allow_create_content[req.user.role]
+			li
+				a.app-menu__item(href='/content' class={'active': activePage == 'content'})
+					i.app-menu__icon.fa.fa-info
+					span.app-menu__label Content
+			
