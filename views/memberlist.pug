@@ -23,10 +23,11 @@ block content
 								th City
 								th State
 								th Date of Birth
+								th Relatives
 								th Status
 								if sails.config.custom.user_create[sails.config.custom.roles[0]]
 									th Edit
-									//th Delete
+									th Delete
 						tbody
 							each member in memberlist
 								tr(id=member.id)
@@ -40,7 +41,12 @@ block content
 										div=member.pincode
 									td=member.city
 									td=member.state
-									td=member.dob
+									-let date = new Date(member.dob).toLocaleDateString()
+										td=date
+									td
+										a(href='/relationlist/' +member.id)
+											button.btn-small.btn-primary(type="submit")
+												| #{'Check'}
 									if sails.config.custom.user_create[sails.config.custom.roles[0]]
 										td
 											.toggle-flip
@@ -50,7 +56,7 @@ block content
 										td
 											a(href='/memberedit/' +member.id) 
 												i.fa.fa-pencil.btn
-										//td
+										td
 											i.fa.fa-trash-o.btn
 									else
 										td

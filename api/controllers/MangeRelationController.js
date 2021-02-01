@@ -29,47 +29,48 @@ module.exports = {
                 .catch(function (err) {
                     res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
                 });
-            if(req.body.self_id === UserData[0].id)
-            {
-                res.json(sails.config.custom.jsonResponse("You cannot create relation between your self", null));
-            } 
-            else
-            {   
-                let selfCreatedCount = await Relations.count({self_id: req.body.self_id, relative_id: UserData[0].id })
-                let getRequestCount = await Relations.count({self_id: UserData[0].id, relative_id: req.body.self_id })
-                if(selfCreatedCount === 0 && getRequestCount === 0){
-                    if(UserData.length !== 0){
-                        let createdRelation = await Relations.create({
-                            self_id: req.body.self_id,
-                            relative_id : UserData[0].id,
-                            relationship : req.body.relationship,
-                        })
-                        .fetch()
-                        .catch(function (err) {
-                            res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
-                        });
-                            if(createdRelation){
-                                res.json(sails.config.custom.jsonResponse( null , createdRelation));
-                            }
-                            else
-                            {
-                                res.json(sails.config.custom.jsonResponse( " something wents wrong " , null))
-                            }
-                    }
-                    else 
+                if(UserData.length !== 0){
+                    if(req.body.self_id === UserData[0].id)
                     {
-                        res.json(sails.config.custom.jsonResponse( "Your Relative Account is not available in this Application" , null))
-                    }
+                        res.json(sails.config.custom.jsonResponse("You cannot create relation between your self", null));
+                    } 
+                    else
+                    {   
+                        let selfCreatedCount = await Relations.count({self_id: req.body.self_id, relative_id: UserData[0].id })
+                        let getRequestCount = await Relations.count({self_id: UserData[0].id, relative_id: req.body.self_id })
+                        if(selfCreatedCount === 0 && getRequestCount === 0){
+                            let createdRelation = await Relations.create({
+                                self_id: req.body.self_id,
+                                relative_id : UserData[0].id,
+                                relationship : req.body.relationship,
+                            })
+                            .fetch()
+                            .catch(function (err) {
+                                res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
+                            });
+                                if(createdRelation){
+                                    res.json(sails.config.custom.jsonResponse( null , createdRelation));
+                                }
+                                else
+                                {
+                                    res.json(sails.config.custom.jsonResponse( " something wents wrong " , null))
+                                }
+                        }
+                        else
+                        {   if(selfCreatedCount > 0)
+                            {
+                                res.json(sails.config.custom.jsonResponse( "You already send the relation request to this phone no." , null)) 
+                            }else if (getRequestCount > 0){
+                                res.json(sails.config.custom.jsonResponse( "Relative client no. already send you request for making relation" , null)) 
+                            }
+                        }
+                    }  
                 }
                 else
-                {   if(selfCreatedCount > 0)
-                    {
-                        res.json(sails.config.custom.jsonResponse( "You already send the relation request to this phone no." , null)) 
-                    }else if (getRequestCount > 0){
-                        res.json(sails.config.custom.jsonResponse( "Relative client no. already send you request for making relation" , null)) 
-                    }
+                {
+                    res.json(sails.config.custom.jsonResponse( "Your Relative Account is not available in this Application" , null))
                 }
-            }    
+
 		 }
     },
 

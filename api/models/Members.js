@@ -43,9 +43,9 @@ module.exports = {
       type : "string",
       required  : true,
     },
-    // photo : {
-    //   type: "string",
-    // },
+    photo : {
+      type: "string",
+    },
     // fcm_token : {
     //   type : 'string'
     // },

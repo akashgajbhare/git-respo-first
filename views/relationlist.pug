@@ -1,0 +1,33 @@
+extends layouts/_layout.pug
+
+block variables
+	- var activePage = 'relationlist'
+	- var activeGroup = 'relation'
+
+block title
+	title User List
+
+block content
+
+	div.tile
+		h1 Relative of 
+			|#{name}
+		tbody
+			each member in relationlist
+				div.p-2
+					a(href='/relationlist/' +member.id)
+						button.btn-primary.btn-Large
+							|#{member.relative+'('+ member.relationship+')'}
+						
+			
+block specific-js
+	// Data table plugin
+	include includes/datatable_js.pug
+
+	script.
+		let relation_list_table = $('#relation_list_table').DataTable({
+			dom: 'lfrtBip',
+			buttons: [
+				'copy', 'csv', 'excel', 'pdf', 'print'
+			]
+		});

@@ -74,7 +74,7 @@ var config = {
 	error_text_size: 12,
 	error_color: 'red',
 	error_class: 'error_class',// + new Date().getTime(),
-	error_display_html: false,
+	error_display_html: true,
 	text_min: 2,
 	text_max: 50,
 	highlight_all_errors: false
@@ -214,7 +214,7 @@ var regex_validation = {
 //var s = '-8.5552';
 //console.log(s.match(regexes['decimal_number']));
 
-exports.validate  =  function (input, user_config) {
+function validate(input, user_config) {
 	
 	if(user_config)
 		Object.keys(user_config).map(key => {config[key] = user_config[key]});
@@ -286,4 +286,13 @@ function setDisplayingError(tagid, errmsg) {
 		$('#' + tagid).after('<span class="error_class", style="color: ' + config.error_color + '; font-size: ' + config.error_text_size + 'px">' + errmsg + '<span>');
 		$('#' + tagid).focus();
 	}
+}
+
+
+var isNode=new Function("try {return this===global;}catch(e){return false;}");
+
+// tests if global scope is binded to "global"
+if(isNode()) {
+	console.log("running under node.js");
+	module.exports.validate = validate;
 }

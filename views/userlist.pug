@@ -24,7 +24,7 @@ block content
 								th Status
 								if sails.config.custom.user_create[req.user.role]
 									th Edit
-									//th Delete
+									th Delete
 						tbody
 							each user in userlist
 								tr(id=user.id)
@@ -46,7 +46,7 @@ block content
 										td
 											a(href='/useredit/' +user.id) 
 												i.fa.fa-pencil.btn
-										//td
+										td
 											i.fa.fa-trash-o.btn
 									else
 										td
@@ -85,7 +85,7 @@ block specific-js
 								swal( "Oops", response.errormsg, "error");
 							}
 							else {
-								swal("Poof! Your user has been deleted!", {icon: "success",});
+								swal("Poof! Your user has been deleted!", {icon: "success"});
 								user_list_table
 									.row(row)
 									.remove()

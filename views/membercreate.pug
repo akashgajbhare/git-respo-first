@@ -35,28 +35,23 @@ block content
 						.row
 							.form-group.col-md-6
 								label.control-label Date of Birth
-								input#membercreate_dob.form-control(type="date", placeholder="Enter DOB", name='membercreate_dob', value=member ? member.dob : '')
+								if member
+									-let date =new Date(member.dob).getDate();
+									-let month = new Date(member.dob).getMonth();
+									-let year = new Date(member.dob).getFullYear();
+									-let fulldate = year+'-'+month+'-'+date;
+									-console.log(fulldate)
+								input#membercreate_dob.form-control(type="date", placeholder="Enter DOB", name='membercreate_dob', value=member ? $fulldate : '')
+							
 							.form-group.col-md-6
 								label.control-label Phone
 								input#membercreate_phone.form-control(type="text", placeholder="Enter Mobile Number", name="membercreate_phone", min='10', max='10', value=member ? member.contactNo : '')
-							//- .form-group.col-md-4
-							//- 	label(for='membercreate_role') Select User Role
-							//- 	select#membercreate_role.form-control(name='membercreate_role')
-							//- 		- let selected_role = member ? member.role : ''
-							//- 		- let role_options = sails.config.custom.roles;
-							//- 		- let show_role_options = false;
-							//- 		each role in role_options
-							//- 			if show_role_options
-							//- 				option(selected=(role===selected_role))=role
-							//- 			if role === requser.role
-							//- 				- show_role_options = true;
 							
 						.form-group
 								label.control-label Address
 								textarea#membercreate_address.form-control(name="membercreate_address", placeholder="Enter Full Address", rows="3", cols="30", value = member ? member.address : '')
-									| #{member ? member.address : null }								
+								| #{member ? member.address : null }								
 								
-								//- input#membercreate_address.form-control(type="text", placeholder="Enter Full Address", name='membercreate_address', value=member ? member.address : '')
 						.row
 							.form-group.col-md-4
 								label.control-label State
@@ -84,11 +79,11 @@ block specific-js
 			{tagid:'membercreate_fname', regex_name: 'text', errmsg: 'Name must be of 3 - 50 character length', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
 			{tagid:'membercreate_mname', regex_name: 'text', errmsg: 'Name must be of 3 - 50 character length', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
 			{tagid:'membercreate_lname', regex_name: 'text', errmsg: 'Name must be of 3 - 50 character length', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
-			{tagid:'membercreate_address', regex_name: 'text', errmsg: 'Name must be of 1 - 100 character length', required: true, min: 1, max: 100, allow_numbers: true, other_chars: ' .\',-'},
-			{tagid:'membercreate_state', regex_name: 'text', errmsg: 'Name must be of 1 - 50 character length', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
-			{tagid:'membercreate_city', regex_name: 'text', errmsg: 'Name must be of 1 - 50 character length', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+		//	{tagid:'membercreate_address', regex_name: 'text', errmsg: 'Address must be of 1 - 100 character length', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_state', regex_name: 'text', errmsg: 'Please Mention State', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_city', regex_name: 'text', errmsg: 'Please Mention City', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
 			{tagid:'membercreate_phone', regex_name: 'exact_x_digits', errmsg: 'Phone number must be of 10 digits', required: true, x_count: 10},
-			{tagid:'membercreate_pincode', regex_name: 'exact_x_digits', errmsg: 'Pincode number must be of 5 digits', required: true, x_count: 5},
+			{tagid:'membercreate_pincode', regex_name: 'exact_x_digits', errmsg: 'Pincode number must be of 5 digits', required: true, x_count: 6},
 		];
 			
 		function validateForm() {

@@ -57,7 +57,7 @@ module.exports = {
 		res.view('memberlist', {memberlist: memberlist});
 		sails.config.log.addOUTlog(req.user.email, req.options.action);
 	},
-	
+
 	getmembercreate: async function(req, res) {
 		sails.config.log.addINlog(req.user.email, req.options.action);
 		res.view('membercreate', {requser: req.user});
@@ -66,25 +66,45 @@ module.exports = {
 	
 	membercreate: async function(req, res) {
 		//	TODO Validate the input and proceed
+		let rules;
 		let date = new Date(req.body.membercreate_dob);
 		var milliseconds = date.getTime();
 		console.log(milliseconds);
 		sails.config.log.addINlog(req.user.email, req.options.action);
-		var createdmember = await Members.create({
-			first_Name: req.body.membercreate_fname,
-			middle_Name: req.body.membercreate_mname,
-			last_Name: req.body.membercreate_lname,
-			dob: milliseconds,
-			contactNo : req.body.membercreate_phone,
-			address: req.body.membercreate_address,
-			pincode: req.body.membercreate_pincode,
-			state: req.body.membercreate_state,
-			city: req.body.membercreate_city,
-		}).fetch();
+        if(req.body.membercreate_phone){
+            rules = [{ tagid: "mobileno", text: req.body.membercreate_phone, regex_name: 'text', errmsg: 'Please enter the valid mobile No', allow_numbers: true, max: 10, min: 10, required: true }];
+        }
+        else
+        { 
+            res.json(sails.config.custom.jsonResponse(" Your mobile no. is not getting", null))
+        }
+        let isValideNumber = await sails.helpers.validation(rules);
+        if (isValideNumber.errmsg) {
+            res.json(sails.config.custom.jsonResponse(isValideNumber.errmsg, null))
+        } else {
+			let checkNoData = await Members.count({contactNo :  req.body.membercreate_phone });
+			if(checkNoData === 0 ){
+				var createdmember = await Members.create({
+					first_Name: req.body.membercreate_fname,
+					middle_Name: req.body.membercreate_mname,
+					last_Name: req.body.membercreate_lname,
+					dob: milliseconds,
+					contactNo : req.body.membercreate_phone,
+					address: req.body.membercreate_address,
+					pincode: req.body.membercreate_pincode,
+					state: req.body.membercreate_state,
+					city: req.body.membercreate_city,
+				}).fetch();
 		
-		res.redirect('/memberlist');
-		sails.config.log.addOUTlog(req.user.email, req.options.action);
-		
+				res.redirect('/memberlist');
+				sails.config.log.addOUTlog(req.user.email, req.options.action);
+			}
+			else
+			{
+				console.log(sails.config.custom.jsonResponse("Mobile no. already Register", null));
+				res.view('membercreate', sails.config.custom.jsonResponse("Mobile no. already Register", null));
+			}
+		}
 	},
 	
 	memberactivestatus: async function(req, res) {

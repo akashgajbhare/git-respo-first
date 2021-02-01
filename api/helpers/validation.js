@@ -27,7 +27,7 @@ module.exports = {
 
 
   fn: async function (inputs , exits) {
-    let output  = validate(inputs.req);
+    let output  = validate(inputs.req, { error_display_html : false });
     console.log(output);
     exits.success(output);
   }

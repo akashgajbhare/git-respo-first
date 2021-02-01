@@ -106,7 +106,7 @@ module.exports = {
     
     uploadPhoto : async function(req, res){
         //stream Content all file Details. 
-        let file = req.file('flightsUpload')._files[0].stream
+        let file = req.file('photo')._files[0].stream
         let allowedTypes  = ['image/jpeg', 'image/png'];
         if(_.indexOf(allowedTypes, file.headers['content-type']) === -1) //headers['content-type'] contain the  file type
         {

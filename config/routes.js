@@ -55,6 +55,9 @@ module.exports.routes = {
 	'GET /memberedit/:id':			'MembersController.membereditget',
 	'POST /memberedit':				'MembersController.membereditpost',
 	
+	
+	'GET /relationlist/:id':		'RelationController.relationlist',
+
 	'GET /formlist':			'FormController.formlist',
 	'GET /formcreate':			'FormController.getformcreate',
 	'POST /formcreate':			'FormController.formcreate',
