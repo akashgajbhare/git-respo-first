@@ -58,15 +58,6 @@ module.exports.routes = {
 	
 	'GET /relationlist/:id':		'RelationController.relationlist',
 
-	'GET /formlist':			'FormController.formlist',
-	'GET /formcreate':			'FormController.getformcreate',
-	'POST /formcreate':			'FormController.formcreate',
-	'POST /formactivestatus':	'FormController.formactivestatus',
-	'POST /formdelete':			'FormController.formdelete',
-	//'GET /formedit/:id':		'FormController.formeditget',
-	'POST /formedit':			'FormController.formeditpost',
-	//'POST /findreportingoptions':'FormController.findreportingoptions',
-	
 	'GET /bookingslist':		'HolidayController.bookingslist',
 	'GET /pendingbookingslist':	'HolidayController.pendingbookingslist',
 	'POST /approvebooking':		'HolidayController.approvebooking',

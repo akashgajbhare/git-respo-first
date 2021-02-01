@@ -41,18 +41,6 @@ module.exports.policies = {
 		'userdelete': ['authenticated', 'allowed_to_create_users', 'refreshSessionCookie']
 	},
 	
-	
-	'form': {
-		'*': ['authenticated', 'refreshSessionCookie'],
-		'formcreate': ['authenticated'/*, 'allowed_to_create_forms'*/, 'refreshSessionCookie'],
-		'getformcreate': ['authenticated'/*, 'allowed_to_create_forms'*/, 'refreshSessionCookie'],
-		//'formeditget': ['authenticated'/*, 'allowed_to_create_forms'*/],
-		'formeditpost': ['authenticated'/*, 'allowed_to_create_forms'*/, 'refreshSessionCookie'],
-		'formactivestatus': ['authenticated'/*, 'allowed_to_create_forms'*/, 'refreshSessionCookie'],
-		'formdelete': ['authenticated'/*, 'allowed_to_create_forms'*/, 'refreshSessionCookie'],
-		'getforms': true
-	},
-	
 	'members': {
 		'*': ['authenticated', 'refreshSessionCookie'],
 		'membercreate': ['authenticated', 'allowed_to_create_users', 'refreshSessionCookie'],

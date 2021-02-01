@@ -50,22 +50,6 @@ aside.app-sidebar
 					i.app-menu__icon.fa.fa-users
 					span.app-menu__label User List
 		
-		if sails.config.custom.form_create[req.user.role]
-			li.treeview(class={'is-expanded': activeGroup == 'forms'})
-				a.app-menu__item(href='#', data-toggle='treeview')
-					i.app-menu__icon.fa.fa-file
-					span.app-menu__label Forms
-					i.treeview-indicator.fa.fa-angle-right
-				ul.treeview-menu
-					li
-						a.treeview-item(href='/formlist' class={'active': activePage == 'formlist'})
-							i.icon.fa.fa-file-text
-							|  Form List
-					li
-						a.treeview-item(href='/formcreate', class={'active': activePage == 'formcreate'})
-							i.icon.fa.fa-file-o
-							|  Create Form
-
 		li.treeview(class={'is-expanded': activeGroup == 'bookings'})
 			a.app-menu__item(href='#', data-toggle='treeview')
 				i.app-menu__icon.fa.fa-globe
