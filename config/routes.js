@@ -58,6 +58,8 @@ module.exports.routes = {
 	
 	'GET /relationlist/:id':		'RelationController.relationlist',
 
+	'GET /notification' : 		'NotificationController.notificaton',
+
 	'GET /bookingslist':		'HolidayController.bookingslist',
 	'GET /pendingbookingslist':	'HolidayController.pendingbookingslist',
 	'POST /approvebooking':		'HolidayController.approvebooking',

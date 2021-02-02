@@ -1,0 +1,25 @@
+extends layouts/_layout.pug
+
+block variables
+    -var ActivePage = 'notification'
+
+block title
+    title AKash
+
+block content
+
+    .tile
+        h1 Notification under working
+
+        .tile-body
+            form(action="submit")
+                .form-group
+                    label.control-label Select data
+                    select#select.form-control(name='select')
+                        - let selected_role = ''
+                        - let role_options = sails.config.custom.roles;
+                        each role in role_options
+                            option(selected=(role===selected_role))=role
+
+
+                            
