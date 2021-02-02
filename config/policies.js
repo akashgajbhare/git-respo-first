@@ -48,7 +48,12 @@ module.exports.policies = {
 		'membereditget': ['authenticated', 'allowed_to_create_users', 'refreshSessionCookie'],
 		'membereditpost': ['authenticated', 'allowed_to_create_users', 'refreshSessionCookie'],
 		'memberactivestatus': ['authenticated', 'allowed_to_create_users', 'refreshSessionCookie'],
-		'memberdelete': ['authenticated', 'allowed_to_create_users', 'refreshSessionCookie']
+		'memberdelete': ['authenticated', 'allowed_to_create_users', 'refreshSessionCookie'],
+
+	},
+	'relation' :{
+		'*': ['authenticated', 'refreshSessionCookie'],
+		'relationlist': ['authenticated', 'allowed_to_create_users', 'refreshSessionCookie'],
 	},
 	
 	'upload': {

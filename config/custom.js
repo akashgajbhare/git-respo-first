@@ -222,7 +222,7 @@ module.exports.custom = {
 		sails.config.custom.fullYearOfLastFYApril = date.getFullYear();
 	},
 
-	places:[
+	places : [
 		{
 		  state: "Andaman and Nicobar Islands",
 		  city : ["Port Blair*"]

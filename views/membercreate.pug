@@ -36,12 +36,13 @@ block content
 							.form-group.col-md-6
 								label.control-label Date of Birth
 								if member
-									-let date =new Date(member.dob).getDate();
-									-let month = new Date(member.dob).getMonth();
-									-let year = new Date(member.dob).getFullYear();
-									-let fulldate = year+'-'+month+'-'+date;
-									-console.log(fulldate)
-								input#membercreate_dob.form-control(type="date", placeholder="Enter DOB", name='membercreate_dob', value=member ? $fulldate : '')
+									-var dateobj = new Date(member.dob);
+									-function pad(n) {return n < 10 ? "0"+n : n;}
+									-var result = dateobj.getFullYear()+"-"+pad(dateobj.getMonth()+1)+"-"+pad(dateobj.getDate());
+									input#membercreate_dob.form-control(type="date", placeholder="Enter DOB", name='membercreate_dob', value= result )
+								else 
+									input#membercreate_dob.form-control(type="date", placeholder="Enter DOB", name='membercreate_dob')
+
 							
 							.form-group.col-md-6
 								label.control-label Phone
@@ -49,9 +50,12 @@ block content
 							
 						.form-group
 								label.control-label Address
-								textarea#membercreate_address.form-control(name="membercreate_address", placeholder="Enter Full Address", rows="3", cols="30", value = member ? member.address : '')
-								| #{member ? member.address : null }								
-								
+								if member
+									textarea#membercreate_address.form-control(name="membercreate_address", placeholder="Enter Full Address", rows="3", cols="30")
+										| #{member.address}	
+								else
+									textarea#membercreate_address.form-control(name="membercreate_address", placeholder="Enter Full Address", rows="3", cols="30")
+
 						.row
 							.form-group.col-md-4
 								label.control-label State

@@ -124,8 +124,8 @@ nbproject
 .vscode
 .node_history
 dump.rdb
-node_modules
-
+static_data
+forms
 npm-debug.log
 lib-cov
 *.seed

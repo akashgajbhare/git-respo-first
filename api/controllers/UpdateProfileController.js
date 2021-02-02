@@ -123,10 +123,8 @@ module.exports = {
                 },
                 async function (err, uploadedFiles) {
                     if (err) return res.serverError(err);
-                    console.log(uploadedFiles[0].fd);
-                    
                     if(uploadedFiles.length !== 0){
-                        let userUpdate = Members.update({id : req.body.self_id}).set({photo: uploadedFiles[0].fd}).fetch()
+                        let userUpdate = Members.update({id : req.body.self_id}).set({photo: path + uploadedFiles[0].filename}).fetch()
                         .catch(function (err) {
                             console.log(err);
                             res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));

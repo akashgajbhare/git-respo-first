@@ -41,8 +41,10 @@ block content
 										div=member.pincode
 									td=member.city
 									td=member.state
-									-let date = new Date(member.dob).toLocaleDateString()
-										td=date
+									-var dateobj = new Date(member.dob);
+									-function pad(n) {return n < 10 ? "0"+n : n;}
+									-var result = pad(dateobj.getDate())+"-"+pad(dateobj.getMonth()+1)+"-"+dateobj.getFullYear();
+										td=result
 									td
 										a(href='/relationlist/' +member.id)
 											button.btn-small.btn-primary(type="submit")
