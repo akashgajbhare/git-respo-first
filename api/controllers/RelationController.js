@@ -12,26 +12,30 @@ module.exports = {
 		let list = []
 		sails.config.log.addINlog(req.user.email, req.options.action);
 		let id = req.param('id', undefined);
-		let selfdetail = await Members.find({id : id});
-		let name = selfdetail[0].first_Name +' '+selfdetail[0].last_Name
+		let selfdetail = await Members.findOne({id : id});
+		let name = selfdetail.first_Name +' '+selfdetail.last_Name
 		let selfcreated = await Relations.find({self_id : id});
 		let relativecreated = await Relations.find({relative_id : id})
 		for(let i=0; selfcreated.length > i; i++){
 			let data = {}
-			let temp = await Members.find({id : selfcreated[i].relative_id});
-				data.relative = temp[0].first_Name + ' ' +temp[0].middle_Name+ ' '+temp[0].last_Name
-				data.id = 	temp[0].id;
+			let temp = await Members.findOne({id : selfcreated[i].relative_id});
+				data.relative = temp.first_Name + ' ' +temp.middle_Name+ ' '+temp.last_Name
+				data.id = 	temp.id;
 				data.relationship = selfcreated[i].relationship;
+				data.status = selfcreated[i].status;
 				list.push(data);
 		}
 		for(let i=0; relativecreated.length > i; i++){
 			let data = {}	
-			let temp = await Members.find({id : relativecreated[i].self_id});
-				data.relative = temp[0].first_Name + ' ' +temp[0].middle_Name+ ' '+temp[0].last_Name
-				data.id = 	temp[0].id;
+			let temp = await Members.findOne({id : relativecreated[i].self_id});
+				data.relative = temp.first_Name + ' ' +temp.middle_Name+ ' '+temp.last_Name
+				data.id = 	temp.id;
 				data.relationship = relativecreated[i].relationship;
+				data.status = relativecreated[i].status;
 				list.push(data);
 		}
+
+		
 		// selfcreated.map(async relation => { 
 		// 		let temp = await Members.find({id : relation.relative_id});
 		// 		data.name = temp[0].first_Name + ' ' +temp[0].middle_Name+ ' '+temp[0].last_Name
