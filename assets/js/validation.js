@@ -243,7 +243,7 @@ function validate(input, user_config) {
 					tag_to_show_error_on = input[i].tagid;
 				
 				setDisplayingError(tag_to_show_error_on, input[i].errmsg);
-				setDisplayingError(input[i].tagid, input[i].errmsg);
+				//setDisplayingError(input[i].tagid, input[i].errmsg);
 			}
 		}
 
