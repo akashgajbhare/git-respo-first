@@ -89,7 +89,8 @@ block specific-js
 					icon: "warning",
 					buttons: true,
 					dangerMode: true,
-				}, function(willDelete) {
+				})
+				.then((willDelete) => {
 					if (willDelete) {
 						$.post('/memberdelete', {memberid: memberid}, function(response) {
 							console.log(response);

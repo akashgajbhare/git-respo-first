@@ -58,13 +58,19 @@ block content
 
 						.row
 							.form-group.col-md-4
-								label.control-label State
-								input#membercreate_state.form-control(type="text", placeholder="Enter State", name='membercreate_state', value=member ? member.state : '')
+								label.control-label Select State
+								-let selected_state = member ? member.state : '';
+								-let places = sails.config.custom.places;
+								select#membercreate_state.form-control(name='membercreate_state')
+									each state in places
+										option(selected=(state.state===selected_state))=state.state
 
 							.form-group.col-md-4
-								label.control-label City
-								input#membercreate_city.form-control(type="text", placeholder="Enter City", name='membercreate_city', value=member ? member.city : '')
-							
+								label.control-label Select City
+								select#membercreate_city.form-control(name='membercreate_city')
+									if member
+										option(selected=member.city)= member.city 
+
 							.form-group.col-md-4
 								label.control-label Pincode
 								input#membercreate_pincode.form-control(type="text", placeholder="Enter Pincode", name='membercreate_pincode', value=member ? member.pincode : '')
@@ -77,19 +83,60 @@ block content
 
 block specific-js
 	script(type='text/javascript', src='/js/validation.js')
-	console.log()
 	script.
+		
+		if("#{errormsg}")
+			{
+			swal("Oops","#{errormsg}", "error");
+			}	
+		
 		let validation_input = [
-			{tagid:'membercreate_fname', regex_name: 'text', errmsg: 'Name must be of 3 - 50 character length', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
-			{tagid:'membercreate_mname', regex_name: 'text', errmsg: 'Name must be of 3 - 50 character length', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
-			{tagid:'membercreate_lname', regex_name: 'text', errmsg: 'Name must be of 3 - 50 character length', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
-		//	{tagid:'membercreate_address', regex_name: 'text', errmsg: 'Address must be of 1 - 100 character length', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_fname', regex_name: 'text', errmsg: 'First Name must be of 3 - 50 character length', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_mname', regex_name: 'text', errmsg: 'Middle Name must be of 3 - 50 character length', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_lname', regex_name: 'text', errmsg: 'Last Name must be of 3 - 50 character length', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_dob', regex_name: 'text', errmsg: 'Please Select the Date', required: true, min: 3, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_phone', regex_name: 'exact_x_digits', errmsg: 'Phone number must be of 10 digits', required: true, x_count: 10},
+			{tagid:'membercreate_address', regex_name: 'text', errmsg: 'Please enter the Address', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+			{tagid:'membercreate_pincode', regex_name: 'exact_x_digits', errmsg: 'Pincode number must be of 6 digits', required: true, x_count: 6},
 			{tagid:'membercreate_state', regex_name: 'text', errmsg: 'Please Mention State', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
 			{tagid:'membercreate_city', regex_name: 'text', errmsg: 'Please Mention City', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
-			{tagid:'membercreate_phone', regex_name: 'exact_x_digits', errmsg: 'Phone number must be of 10 digits', required: true, x_count: 10},
-			{tagid:'membercreate_pincode', regex_name: 'exact_x_digits', errmsg: 'Pincode number must be of 5 digits', required: true, x_count: 6},
 		];
 			
 		function validateForm() {
+			//- if($('#membercreate_address').val().length == 0)
+			//- {
+			//- 	alert("Enter Value")
+			//- 	$('#membercreate_address').after('<span class="error_class", style="color: red; font-size: 12px">' + "please Enter the Address" + '<span>');
+			//- 	$('#membercreate_address').focus();
+			//- }
 			return validate(validation_input);
 		}
+
+			let places = !{JSON.stringify(sails.config.custom.places)}
+			let selected_city =''
+			let selected_state = '#{member}' ? '{#member.state}' : "";
+				$('#membercreate_state').change(function() {
+				let cities = []
+				let options =''
+				let selected_state = $(this).val() 
+					console.log(selected_state);
+					for(i=0; places.length > i ; i++){
+						if(places[i].state == selected_state) {
+							cities = places[i].city
+							console.log(cities)
+						}     
+					}
+					for (i = 0; i < cities.length; i++) {
+						//$('#city').append('<option>' + cities[i] + '</option>')
+						options += '<option value="' + cities[i] + '">' + cities[i] + '</option>';
+					}
+					$('#membercreate_city').html(options)
+					//- cities.map(city=>{
+					//-     console.log(city);
+					//-      $("<option/>").
+					//-                 val(city).
+					//-                 text(city).
+					//-                 appendTo("#city");
+					//- })
+				
+				}); 

@@ -76,7 +76,7 @@ module.exports = {
         }
         else
         { 
-            res.json(sails.config.custom.jsonResponse(" Your mobile no. is not getting", null))
+            return res.view('membercreate',sails.config.custom.jsonResponse("Your mobile no. is not getting", null))
         }
         let isValideNumber = await sails.helpers.validation(rules);
         if (isValideNumber.errmsg) {
@@ -94,15 +94,17 @@ module.exports = {
 					pincode: req.body.membercreate_pincode,
 					state: req.body.membercreate_state,
 					city: req.body.membercreate_city,
-				}).fetch();
-		
+				}).fetch()
+				.catch((err)=>{  
+					return res.view('membercreate', sails.config.custom.jsonResponse("Required data field is missing..", null));
+				})
 				res.redirect('/memberlist');
 				sails.config.log.addOUTlog(req.user.email, req.options.action);
 			}
 			else
 			{
 				console.log(sails.config.custom.jsonResponse("Mobile no. already Register", null));
-				res.view('membercreate', sails.config.custom.jsonResponse("Mobile no. already Register", null));
+				return res.view('membercreate', sails.config.custom.jsonResponse("Mobile no. already Register", null));
 			}
 		}
 	},

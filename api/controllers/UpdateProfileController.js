@@ -107,6 +107,7 @@ module.exports = {
     uploadPhoto : async function(req, res){
         //stream Content all file Details. 
         let file = req.file('photo')._files[0].stream
+        var newFilename = file.filename;
         let allowedTypes  = ['image/jpeg', 'image/png'];
         if(_.indexOf(allowedTypes, file.headers['content-type']) === -1) //headers['content-type'] contain the  file type
         {
@@ -119,10 +120,13 @@ module.exports = {
                 console.log(path);
                 req.file('photo').upload({
                     dirname: ('../..'+ path),
+                    saveAs: newFilename      //this is how you put custom name when upload file
                     // You can apply a file upload limit (in bytes)
                 },
                 async function (err, uploadedFiles) {
                     if (err) return res.serverError(err);
+                    console.log(uploadedFiles[0]);
+                    console.log(path + uploadedFiles[0].filename);
                     if(uploadedFiles.length !== 0){
                         let userUpdate = Members.update({id : req.body.self_id}).set({photo: path + uploadedFiles[0].filename}).fetch()
                         .catch(function (err) {

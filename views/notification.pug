@@ -7,19 +7,59 @@ block title
     title AKash
 
 block content
-
+    -let n="akash"
     .tile
-        h1 Notification under working
+        h1 Notification under working- #{n}
 
         .tile-body
             form(action="submit")
+                -let places =sails.config.custom.places;
+                
                 .form-group
-                    label.control-label Select data
-                    select#select.form-control(name='select')
-                        - let selected_role = ''
-                        - let role_options = sails.config.custom.roles;
-                        each role in role_options
-                            option(selected=(role===selected_role))=role
+                    label.control-label Select State
+                    select#state.form-control(name='state' )
+                        each state in places
+                            option(selected=(state.state===selected_state))=state.state
+                .form-group
+                    label.control-label Select City
+                    select#city.form-control(name='city')
+
+block specific-js
+    script.
+        let places = !{JSON.stringify(sails.config.custom.places)}
+        let selected_city =''
+        let selected_state = ''
+        
+        $('#state').change(function() {
+          let cities = []
+          let options =''
+          let selected_state = $(this).val() 
+            console.log(selected_state);
+            for(i=0; places.length > i ; i++){
+                if(places[i].state == selected_state) {
+                    cities = places[i].city
+                    console.log(cities)
+                }     
+            }
+            for (i = 0; i < cities.length; i++) {
+                //$('#city').append('<option>' + cities[i] + '</option>')
+                options += '<option value="' + cities[i] + '">' + cities[i] + '</option>';
+            }
+            $('#city').html(options)
+            //- cities.map(city=>{
+            //-     console.log(city);
+            //-      $("<option/>").
+            //-                 val(city).
+            //-                 text(city).
+            //-                 appendTo("#city");
+            //- })
+           
+        }); 
 
 
-                            
+
+        console.log(cities)
+        //- -for(i=0; places.length > i; i++) { if(selected_state == places[i].state) cities = places[i].city }
+        //- -console.
+       
+
