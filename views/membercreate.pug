@@ -46,13 +46,13 @@ block content
 							
 							.form-group.col-md-6
 								label.control-label Phone
-								input#membercreate_phone.form-control(type="text", placeholder="Enter Mobile Number", name="membercreate_phone", min='10', max='10', value=member ? member.contactNo : '')
+								input#membercreate_phone.form-control(type="text", placeholder="Enter Mobile Number", name="membercreate_phone", min='10', max='10', value=member ? member.phone : '')
 							
 						.form-group
 								label.control-label Address
 								if member
 									textarea#membercreate_address.form-control(name="membercreate_address", placeholder="Enter Full Address", rows="3", cols="30")
-										| #{member.address}	
+										| #{member.address}
 								else
 									textarea#membercreate_address.form-control(name="membercreate_address", placeholder="Enter Full Address", rows="3", cols="30")
 
@@ -131,12 +131,4 @@ block specific-js
 						options += '<option value="' + cities[i] + '">' + cities[i] + '</option>';
 					}
 					$('#membercreate_city').html(options)
-					//- cities.map(city=>{
-					//-     console.log(city);
-					//-      $("<option/>").
-					//-                 val(city).
-					//-                 text(city).
-					//-                 appendTo("#city");
-					//- })
-				
 				}); 

@@ -28,7 +28,7 @@ module.exports = {
 				middle_Name: req.body.membercreate_mname,
 				last_Name: req.body.membercreate_lname,
 				dob: milliseconds,
-				contactNo : req.body.membercreate_phone,
+				phone : req.body.membercreate_phone,
 				address: req.body.membercreate_address,
 				pincode: req.body.membercreate_pincode,
 				state: req.body.membercreate_state,
@@ -82,14 +82,14 @@ module.exports = {
         if (isValideNumber.errmsg) {
             res.json(sails.config.custom.jsonResponse(isValideNumber.errmsg, null))
         } else {
-			let checkNoData = await Members.count({contactNo :  req.body.membercreate_phone });
+			let checkNoData = await Members.count({phone :  req.body.membercreate_phone });
 			if(checkNoData === 0 ){
 				var createdmember = await Members.create({
 					first_Name: req.body.membercreate_fname,
 					middle_Name: req.body.membercreate_mname,
 					last_Name: req.body.membercreate_lname,
 					dob: milliseconds,
-					contactNo : req.body.membercreate_phone,
+					phone : req.body.membercreate_phone,
 					address: req.body.membercreate_address,
 					pincode: req.body.membercreate_pincode,
 					state: req.body.membercreate_state,

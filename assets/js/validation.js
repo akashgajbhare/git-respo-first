@@ -270,7 +270,7 @@ function getValueForValidation(tagid) {
 
 	let value = ''
 	if(tagName === 'INPUT' || tagName === 'SELECT' || tagName === 'TEXTAREA') {
-		value = jq_tag.val();
+		value = jq_tag.val() == null ? "" : jq_tag.val();
 	}
 
 	return value;

@@ -56,6 +56,11 @@ module.exports.policies = {
 		'relationlist': ['authenticated', 'allowed_to_create_users', 'refreshSessionCookie'],
 	},
 	
+	'notification':{
+		'*' : ['authenticated', 'refreshSessionCookie'],
+		'sendnotification' : ['authenticated', 'allowed_to_create_users', 'refreshSessionCookie'],
+	},
+	
 	'upload': {
 		'*': ['authenticated', 'refreshSessionCookie'],
 		'postupload': true

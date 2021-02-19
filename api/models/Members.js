@@ -9,7 +9,7 @@ module.exports = {
 
   attributes: {
 
-    contactNo : {
+    phone : {
       type: 'string',
       unique: true,
     },

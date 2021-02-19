@@ -28,7 +28,7 @@ module.exports = {
             else 
             {
                 if (req.query.userphone) {
-                    let getDetails = await Members.find({ contactNo: req.query.userphone }).catch(function (err) {
+                    let getDetails = await Members.find({ phone: req.query.userphone }).catch(function (err) {
                         res.json(sails.config.custom.jsonResponse("Something went wrong", null))
                     })
                     if (getDetails.length !== 0) {
@@ -69,9 +69,9 @@ module.exports = {
             let city = req.body.city
             let dob = req.body.dob
             let createdUser = await Members.findOrCreate({
-                contactNo: contactno
+                phone: contactno
             }, {
-                contactNo: contactno,
+                phone: contactno,
                 first_Name: fname,
                 middle_Name: mname,
                 last_Name: lname,
@@ -86,7 +86,7 @@ module.exports = {
                 let updateUser = await Members.update({
                     id: createdUser.id
                 }, {
-                    contactNo: contactno,
+                    phone: contactno,
                     first_Name: fname,
                     middle_Name: mname,
                     last_Name: lname,

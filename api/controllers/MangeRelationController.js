@@ -25,7 +25,7 @@ module.exports = {
 		if(isValideNumber.errmsg){
             res.json(sails.config.custom.jsonResponse( isValideNumber.errmsg, null))
 		} else{
-            let UserData = await Members.find({contactNo : req.body.relativephone})
+            let UserData = await Members.find({phone : req.body.relativephone})
                 .catch(function (err) {
                     res.json(sails.config.custom.jsonResponse("Something Went Wrong", null));
                 });

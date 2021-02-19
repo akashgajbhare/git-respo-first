@@ -4,33 +4,54 @@ block variables
     -var ActivePage = 'notification'
 
 block title
-    title AKash
+    title Notification
 
 block content
     -let n="akash"
     .tile
-        h1 Notification under working- #{n}
-
+        h1 Notification
+        
         .tile-body
-            form(action="submit")
-                -let places =sails.config.custom.places;
-                
+            form( action="/sendnotification", method='post', onsubmit='return validateForm()')
                 .form-group
-                    label.control-label Select State
-                    select#state.form-control(name='state' )
-                        each state in places
-                            option(selected=(state.state===selected_state))=state.state
-                .form-group
-                    label.control-label Select City
-                    select#city.form-control(name='city')
+                    label.control-label Content
+                    textarea#notificationtext.form-control(name="notificationtext", placeholder="Write Notification Content " cols="30", rows="3")
+
+                .row 
+                    .form-group.col-md-6
+                        label.control-label Select State
+                        -let places =sails.config.custom.places;
+                        select#notificationstate.form-control(name='notificationstate' )
+                            each state in places
+                                option(selected=(state.state===selected_state))=state.state
+                    .form-group.col-md-6
+                        label.control-label Select City
+                        select#notificationcity.form-control(name='notificationcity')
+                .row
+                    .form-group.col-md-2
+                        button.btn.btn-primary(type="submit")
+                            i.fa.fa-fw.fa-lg.fa-check-circle
+                            | Submit        
 
 block specific-js
+	
+    script(type='text/javascript', src='/js/validation.js')
     script.
+
+        if("#{data}")
+            {
+                swal(" Your notification Posted Successfully", {icon: "success",})
+            }
+        if("#{errormsg}")
+            {
+                swal("Oops","#{errormsg}", "error");
+            }	
+
         let places = !{JSON.stringify(sails.config.custom.places)}
         let selected_city =''
         let selected_state = ''
         
-        $('#state').change(function() {
+        $('#notificationstate').change(function() {
           let cities = []
           let options =''
           let selected_state = $(this).val() 
@@ -45,21 +66,21 @@ block specific-js
                 //$('#city').append('<option>' + cities[i] + '</option>')
                 options += '<option value="' + cities[i] + '">' + cities[i] + '</option>';
             }
-            $('#city').html(options)
-            //- cities.map(city=>{
-            //-     console.log(city);
-            //-      $("<option/>").
-            //-                 val(city).
-            //-                 text(city).
-            //-                 appendTo("#city");
-            //- })
-           
-        }); 
-
-
-
-        console.log(cities)
-        //- -for(i=0; places.length > i; i++) { if(selected_state == places[i].state) cities = places[i].city }
-        //- -console.
+            $('#notificationcity').html(options)           
+        });
+            let validation_input = [
+                {tagid:'notificationtext', regex_name: 'text', errmsg: 'Please enter Notification Content', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+                {tagid:'notificationstate', regex_name: 'text', errmsg: 'Please Select State', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+                {tagid:'notificationcity', regex_name: 'text', errmsg: 'Please Select City', required: true, min: 1, max: 50, allow_numbers: true, other_chars: ' .\',-'},
+            ];
+            function validateForm() {
+                //- if($('#membercreate_address').val().length == 0)
+                //- {
+                //- 	alert("Enter Value")
+                //- 	$('#membercreate_address').after('<span class="error_class", style="color: red; font-size: 12px">' + "please Enter the Address" + '<span>');
+                //- 	$('#membercreate_address').focus();
+                //- }
+                return validate(validation_input);
+            }
        
 
